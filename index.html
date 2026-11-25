@@ -78,7 +78,6 @@
       <div id="dash-unmarked-btns" class="flex flex-wrap gap-1.5"></div>
     </div>
 
-    <!-- 6 COLORFUL MENU BUTTONS -->
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
       <button type="button" onclick="switchTab('fees')" class="g-emerald text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
         <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-emerald-100">Fees</span><i class="fa-solid fa-indian-rupee-sign bg-white/20 p-2 rounded-xl text-xs"></i></div>
@@ -94,7 +93,7 @@
       </button>
       <button type="button" onclick="switchTab('batches')" class="g-sky text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
         <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-sky-100">Batches</span><i class="fa-solid fa-layer-group bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-bat-count" class="text-base sm:text-lg font-extrabold">0 Batches</p><p class="text-[11px] text-sky-50 font-semibold">Create / Manage →</p></div>
+        <div><p id="btn-bat-count" class="text-base sm:text-lg font-extrabold">0 Batches</p><p class="text-[11px] text-sky-50 font-semibold">Create / Edit →</p></div>
       </button>
       <button type="button" onclick="switchTab('tests')" class="g-purple text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
         <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-purple-100">Tests & Results</span><i class="fa-solid fa-file-pen bg-white/20 p-2 rounded-xl text-xs"></i></div>
@@ -106,12 +105,11 @@
       </button>
     </div>
 
-    <!-- HOME PENDING FEES DIRECTORY (Count + Student Names) -->
     <div class="bg-white rounded-2xl shadow-sm border border-rose-200 overflow-hidden">
       <div class="px-4 py-3 border-b bg-rose-50 flex justify-between items-center">
         <div>
           <h3 class="font-extrabold text-sm text-rose-900 flex items-center gap-2"><i class="fa-solid fa-bell text-rose-600"></i> <span id="dash-pending-title">Pending Fees (0 Students)</span></h3>
-          <p class="text-[10px] text-rose-600">Students highlighted in red have crossed their monthly due date</p>
+          <p class="text-[10px] text-rose-600">Red cards indicate students past their monthly due date</p>
         </div>
         <button type="button" onclick="openFeesTabFilter('pending')" class="text-xs font-bold bg-rose-600 text-white px-2.5 py-1 rounded-lg">See All</button>
       </div>
@@ -134,7 +132,7 @@
     </div>
   </section>
 
-  <!-- 2. FEES (BIG COLORFUL TAB BUTTONS) -->
+  <!-- 2. FEES -->
   <section id="sec-fees" class="hidden space-y-3.5">
     <div class="flex justify-between items-center">
       <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
@@ -180,7 +178,7 @@
     <div id="fee-subtab-content" class="space-y-2.5"></div>
   </section>
 
-  <!-- 3. ATTENDANCE (4 BIG COLORFUL TAB BUTTONS) -->
+  <!-- 3. ATTENDANCE -->
   <section id="sec-attendance" class="hidden space-y-3.5">
     <div class="flex justify-between items-center">
       <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
@@ -200,7 +198,6 @@
       </div>
     </div>
 
-    <!-- 4 COLORFUL ATTENDANCE TAB BUTTONS -->
     <div class="grid grid-cols-4 gap-1.5 sm:gap-2.5">
       <button type="button" onclick="setAttSubTab('mark')" id="asub-mark" class="g-indigo text-white p-2.5 rounded-2xl text-left shadow ring-4 ring-indigo-300">
         <span class="text-[9px] font-bold uppercase block">Total</span>
@@ -227,17 +224,17 @@
     <div id="attendance-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5"></div>
   </section>
 
-  <!-- 4. BATCHES SECTION -->
+  <!-- 4. BATCHES SECTION (WITH EDIT & DELETE) -->
   <section id="sec-batches" class="hidden space-y-3.5">
     <div class="flex justify-between items-center">
       <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
       <h2 class="font-extrabold text-sm">Batch Management</h2>
-      <button type="button" onclick="openModal('modal-add-batch')" class="bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Create Batch</button>
+      <button type="button" onclick="openBatchModal(null)" class="bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Create Batch</button>
     </div>
     <div id="batches-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
   </section>
 
-  <!-- 5. STUDENTS (GROUPED BY BATCH + OVERDUE RED HIGHLIGHT) -->
+  <!-- 5. STUDENTS -->
   <section id="sec-students" class="hidden space-y-3">
     <div class="flex justify-between items-center">
       <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
@@ -259,7 +256,7 @@
     <div id="students-grid" class="space-y-4"></div>
   </section>
 
-  <!-- 6. TESTS & DATE-WISE RESULTS -->
+  <!-- 6. TESTS & RESULTS -->
   <section id="sec-tests" class="hidden space-y-3.5">
     <div class="flex justify-between items-center">
       <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
@@ -295,13 +292,15 @@
 
 </main>
 
-<nav class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t grid grid-cols-6 py-1.5 px-1 z-30">
-  <button type="button" onclick="switchTab('dashboard')" id="mtab-dashboard" class="flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-indigo-600 bg-indigo-50"><i class="fa-solid fa-house text-sm"></i><span>Home</span></button>
-  <button type="button" onclick="switchTab('fees')" id="mtab-fees" class="flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-slate-400"><i class="fa-solid fa-indian-rupee-sign text-sm"></i><span>Fees</span></button>
-  <button type="button" onclick="switchTab('attendance')" id="mtab-attendance" class="flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-slate-400"><i class="fa-solid fa-calendar-check text-sm"></i><span>Attend</span></button>
-  <button type="button" onclick="switchTab('batches')" id="mtab-batches" class="flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-sm"></i><span>Batches</span></button>
-  <button type="button" onclick="switchTab('students')" id="mtab-students" class="flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-slate-400"><i class="fa-solid fa-users text-sm"></i><span>Students</span></button>
-  <button type="button" onclick="switchTab('tests')" id="mtab-tests" class="flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-slate-400"><i class="fa-solid fa-file-pen text-sm"></i><span>Tests</span></button>
+<!-- 7-BUTTON MOBILE BOTTOM BAR (INCLUDES REPORTS!) -->
+<nav class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t grid grid-cols-7 py-1.5 px-0.5 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+  <button type="button" onclick="switchTab('dashboard')" id="mtab-dashboard" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-indigo-600 bg-indigo-50"><i class="fa-solid fa-house text-xs mb-0.5"></i><span>Home</span></button>
+  <button type="button" onclick="switchTab('fees')" id="mtab-fees" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-indian-rupee-sign text-xs mb-0.5"></i><span>Fees</span></button>
+  <button type="button" onclick="switchTab('attendance')" id="mtab-attendance" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-calendar-check text-xs mb-0.5"></i><span>Attend</span></button>
+  <button type="button" onclick="switchTab('batches')" id="mtab-batches" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-xs mb-0.5"></i><span>Batch</span></button>
+  <button type="button" onclick="switchTab('students')" id="mtab-students" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-users text-xs mb-0.5"></i><span>Student</span></button>
+  <button type="button" onclick="switchTab('tests')" id="mtab-tests" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-file-pen text-xs mb-0.5"></i><span>Tests</span></button>
+  <button type="button" onclick="switchTab('reports')" id="mtab-reports" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-chart-column text-xs mb-0.5"></i><span>Report</span></button>
 </nav>
 
 <!-- MODALS -->
@@ -316,14 +315,15 @@
   </div>
 </div>
 
-<div id="modal-add-batch" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-10 justify-center p-3 overflow-y-auto">
+<!-- CREATE / EDIT BATCH MODAL -->
+<div id="modal-batch" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-10 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-4 py-3 g-sky text-white flex justify-between items-center"><h3 class="font-bold text-sm">Create New Batch</h3><button type="button" onclick="closeModal('modal-add-batch')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="submitNewBatch(event)" class="p-4 space-y-3">
+    <div class="px-4 py-3 g-sky text-white flex justify-between items-center"><h3 id="bat-modal-title" class="font-bold text-sm">Create New Batch</h3><button type="button" onclick="closeModal('modal-batch')"><i class="fa-solid fa-xmark"></i></button></div>
+    <form onsubmit="submitBatchForm(event)" class="p-4 space-y-3">
       <input type="text" id="inp-bat-name" required placeholder="Batch Name * (e.g., Batch 1 - Class 10th)" class="w-full border rounded-xl px-3 py-2 text-sm">
       <div class="grid grid-cols-2 gap-2"><input type="text" id="inp-bat-time" placeholder="Timing (e.g., 4 PM - 5 PM)" class="border rounded-xl px-3 py-2 text-sm"><input type="number" id="inp-bat-fee" required min="0" placeholder="Default Fee ₹ *" class="border rounded-xl px-3 py-2 text-sm font-bold"></div>
       <input type="text" id="inp-bat-sub" placeholder="Subjects / Notes (Optional)" class="w-full border rounded-xl px-3 py-2 text-sm">
-      <button type="submit" class="w-full bg-sky-600 text-white font-bold py-2.5 rounded-xl">Create Batch</button>
+      <button type="submit" id="bat-submit-btn" class="w-full bg-sky-600 text-white font-bold py-2.5 rounded-xl">Save Batch</button>
     </form>
   </div>
 </div>
@@ -359,7 +359,6 @@
   </div>
 </div>
 
-<!-- DIGITAL FEE RECEIPT MODAL -->
 <div id="modal-receipt" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-10 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-4 py-3 g-emerald text-white flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-receipt mr-1.5"></i>Fee Payment Receipt</h3><button type="button" onclick="closeModal('modal-receipt')"><i class="fa-solid fa-xmark"></i></button></div>
@@ -391,7 +390,6 @@
   </div>
 </div>
 
-<!-- TEST SCORECARD MODAL WITH PASS/FAIL TABS -->
 <div id="modal-test-view" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[88vh] flex flex-col overflow-hidden">
     <div class="px-4 py-3 bg-slate-900 text-white flex justify-between items-center">
@@ -428,6 +426,7 @@ let gasUrl='';
 try{gasUrl=localStorage.getItem('COACHING_GAS_API_URL')||'';}catch(e){}
 let appData={batches:[],students:[],attendanceMap:{},attendanceRemarks:{},unmarkedDates:[],recentFees:[],tests:[],testMarks:[],summary:{}};
 let localAttendance={},localRemarks={},currentFeeSubTab='pending',currentAttSubTab='mark',activeDetailStudentId=null,activeTestId=null,currentTestTab='all';
+let editingBatch=null;
 const nowD=new Date();
 const fmtD=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const todayISO=fmtD(nowD),yestD=new Date(nowD.getTime()-86400000),yestISO=fmtD(yestD);
@@ -464,7 +463,20 @@ async function callApi(action,body){
 const Backend={
   getAppData:(d,ok,err)=>!gasUrl?ok(buildDemo(d)):callApi('getAppData',{date:d}).then(ok).catch(()=>err(new Error('Connection failed! Check /exec URL & Anyone access.'))),
   addBatch:(p,ok,err)=>{if(!gasUrl){demoDB.batches.push({id:'BAT-'+Date.now(),name:p.name,timing:p.timing,defaultFee:Number(p.defaultFee)||0,subject:p.subject});return ok(buildDemo(p.currentDate));}callApi('addBatch',{payload:p}).then(ok).catch(err);},
-  deleteBatch:(id,d,ok,err)=>{if(!gasUrl){demoDB.batches=demoDB.batches.filter(b=>b.id!==id);return ok(buildDemo(d));}callApi('deleteBatch',{batchId:id,currentDate:d}).then(ok).catch(err);},
+  editBatch:(p,ok,err)=>{
+    if(!gasUrl){
+      let b=demoDB.batches.find(x=>(p.id!=='AUTO'&&x.id===p.id)||x.name===p.oldName);
+      if(b){b.name=p.name;b.timing=p.timing;b.defaultFee=Number(p.defaultFee)||0;b.subject=p.subject;}
+      else demoDB.batches.push({id:'BAT-'+Date.now(),name:p.name,timing:p.timing,defaultFee:Number(p.defaultFee)||0,subject:p.subject});
+      if(p.oldName!==p.name){demoDB.students.forEach(s=>{if(s.batch===p.oldName)s.batch=p.name;});demoDB.tests.forEach(t=>{if(t.batch===p.oldName)t.batch=p.name;});}
+      return ok(buildDemo(p.currentDate));
+    }
+    callApi('editBatch',{payload:p}).then(ok).catch(err);
+  },
+  deleteBatch:(id,name,d,ok,err)=>{
+    if(!gasUrl){demoDB.batches=demoDB.batches.filter(b=>b.id!==id&&b.name!==name);demoDB.students.forEach(s=>{if(s.batch===name)s.batch='General';});return ok(buildDemo(d));}
+    callApi('deleteBatch',{batchId:id,batchName:name,currentDate:d}).then(ok).catch(err);
+  },
   addStudent:(p,ok,err)=>{
     if(!gasUrl){const id='STU-'+String(demoDB.students.length+1).padStart(3,'0'),m=Number(p.monthlyFee)||0,pay=Number(p.openingPayable)||0;demoDB.students.push({id,name:p.name,batch:p.batch,joinedClass:p.joinedClass||p.batch,joiningDate:p.joiningDate,studentPhone:p.fatherPhone,fatherName:p.fatherName,fatherPhone:p.fatherPhone,motherName:p.motherName,motherPhone:p.motherPhone,monthlyFee:m,totalPayable:pay,manualPayable:pay,discount:0,totalPaid:0,pendingFee:pay,nextDueDate:p.joiningDate,isOverdue:pay>0,presentDays:0,absentDays:0,leaveDays:0,address:p.address});return ok(buildDemo(p.currentDate));}
     callApi('addStudent',{payload:p}).then(ok).catch(err);
@@ -495,7 +507,7 @@ function switchTab(tab){
     const s=document.getElementById('sec-'+t),dt=document.getElementById('dtab-'+t),mt=document.getElementById('mtab-'+t);
     if(s)s.classList.toggle('hidden',t!==tab);
     if(dt)dt.classList.toggle('tab-active',t===tab);
-    if(mt)mt.className=t===tab?`flex flex-col items-center py-1 rounded-xl text-[10px] font-bold ${cols[t]}`:'flex flex-col items-center py-1 rounded-xl text-[10px] font-bold text-slate-400';
+    if(mt)mt.className=t===tab?`flex flex-col items-center py-1 rounded-lg text-[9px] font-bold ${cols[t]}`:'flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400';
   });
   window.scrollTo(0,0);
 }
@@ -567,300 +579,4 @@ function renderDashboard(){
       </div>
       <div class="flex items-center gap-1 shrink-0">
         <span class="font-extrabold text-xs text-rose-600">${formatINR(x.pendingFee)}</span>
-        <button type="button" onclick="openFeeModal('${x.id}')" class="bg-emerald-600 text-white px-2 py-1 rounded-lg text-[11px] font-bold">Pay</button>
-        <button type="button" onclick="sendWhatsApp('${x.id}','fee')" class="bg-green-50 text-green-600 p-1.5 rounded-lg text-xs"><i class="fa-brands fa-whatsapp"></i></button>
-      </div>
-    </div>
-  `).join(''):'<p class="p-5 text-center text-xs text-slate-400">All student fees are clear!</p>';
-
-  document.getElementById('dash-this-month-fee').innerText=formatINR(tm.feeSum);
-  document.getElementById('dash-last-month-fee').innerText='Last mo: '+formatINR(lm.feeSum);
-  document.getElementById('dash-this-month-stu').innerText=tm.stuCount+' Students';
-  document.getElementById('dash-last-month-stu').innerText='Last mo: '+lm.stuCount;
-  const tb=s.totalCollected+s.totalPending,pct=tb>0?Math.round((s.totalCollected/tb)*100):100;
-  document.getElementById('dash-recovery-pct').innerText=pct+'%';
-  document.getElementById('dash-recovery-bar').style.width=pct+'%';
-
-  let h='';
-  appData.students.filter(st=>appData.attendanceMap[st.id]==='Leave').forEach(st=>{h+=`<div class="px-3.5 py-2.5 bg-amber-50/50 flex justify-between text-xs"><div><b>${st.name} (Leave)</b><p class="text-[10px] text-amber-700">${appData.attendanceRemarks[st.id]||'Leave'}</p></div><span class="text-[10px] font-bold text-amber-800">${appData.selectedDate}</span></div>`;});
-  appData.tests.slice(0,4).forEach(t=>{h+=`<div onclick="openTestView('${t.testId}')" class="px-3.5 py-2.5 flex justify-between items-center cursor-pointer"><div><p class="font-bold text-xs">${t.testName}</p><p class="text-[10px] text-slate-400">${t.date} • ${t.batch}</p></div><span class="text-[11px] font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded-lg">Max ${t.maxMarks}</span></div>`;});
-  document.getElementById('dash-tests-leaves').innerHTML=h||'<p class="p-5 text-center text-xs text-slate-400">No tests or leaves today.</p>';
-}
-
-function jumpToAttDate(d){document.getElementById('att-date').value=d;switchTab('attendance');fetchData(d);}
-
-// --- ATTENDANCE WITH 4 TABS ---
-function setAttSubTab(sub){
-  currentAttSubTab=sub;
-  const base={mark:'g-indigo',Present:'g-emerald',Absent:'g-rose',Leave:'g-amber'};
-  const rings={mark:'ring-4 ring-indigo-300',Present:'ring-4 ring-emerald-300',Absent:'ring-4 ring-rose-300',Leave:'ring-4 ring-amber-300'};
-  ['mark','Present','Absent','Leave'].forEach(t=>{
-    document.getElementById('asub-'+t).className=`${base[t]} text-white p-2.5 rounded-2xl text-left shadow ${t===sub?rings[t]:'opacity-75'}`;
-  });
-  renderAttendanceView();
-}
-
-function renderAttendanceView(){
-  document.getElementById('att-status-badge').innerHTML=appData.isSelectedDateMarked?'<span class="text-[11px] font-bold bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg">Marked</span>':'<span class="text-[11px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg">Not Marked</span>';
-  const b=document.getElementById('att-batch-filter').value,all=appData.students.filter(s=>b==='ALL'||s.batch===b);
-  let p=0,a=0,l=0;
-  all.forEach(s=>{const st=localAttendance[s.id]||'Present';if(st==='Present')p++;else if(st==='Absent')a++;else if(st==='Leave')l++;});
-  document.getElementById('att-cnt-total').innerText=all.length;
-  document.getElementById('att-cnt-Present').innerText=p;
-  document.getElementById('att-cnt-Absent').innerText=a;
-  document.getElementById('att-cnt-Leave').innerText=l;
-
-  const list=currentAttSubTab==='mark'?all:all.filter(s=>(localAttendance[s.id]||'Present')===currentAttSubTab);
-  const box=document.getElementById('attendance-list');
-  if(!list.length)return box.innerHTML=`<div class="col-span-full bg-white p-8 rounded-2xl text-center text-xs text-slate-400">No students in "${currentAttSubTab}" list.</div>`;
-
-  box.innerHTML=list.map(s=>{
-    const st=localAttendance[s.id]||'Present',rem=localRemarks[s.id]||'';
-    const bg=st==='Absent'?'border-rose-300 bg-rose-50/40':(st==='Leave'?'border-amber-300 bg-amber-50/40':'border-emerald-200 bg-white');
-    return`<div class="p-3.5 rounded-2xl border ${bg} space-y-2"><div class="flex justify-between items-center gap-2"><div class="min-w-0"><h4 class="font-bold text-sm truncate">${s.name}</h4><p class="text-[11px] text-slate-500">${s.batch} • ${s.absentDays}A • ${s.leaveDays}L</p></div><div class="flex items-center gap-1">${st==='Absent'?`<button type="button" onclick="sendWhatsApp('${s.id}','absent')" class="bg-green-100 text-green-700 p-1.5 rounded-lg text-xs" title="Notify Parent"><i class="fa-brands fa-whatsapp"></i></button>`:''}<div class="flex bg-slate-100 p-1 rounded-xl gap-1"><button type="button" onclick="setAtt('${s.id}','Present')" class="px-2 py-1 rounded-lg text-[11px] font-bold ${st==='Present'?'bg-emerald-500 text-white':'text-slate-500'}">P</button><button type="button" onclick="setAtt('${s.id}','Absent')" class="px-2 py-1 rounded-lg text-[11px] font-bold ${st==='Absent'?'bg-rose-500 text-white':'text-slate-500'}">A</button><button type="button" onclick="setAtt('${s.id}','Leave')" class="px-2 py-1 rounded-lg text-[11px] font-bold ${st==='Leave'?'bg-amber-500 text-white':'text-slate-500'}">Leave</button></div></div></div>${st==='Leave'?`<input type="text" value="${rem}" onchange="localRemarks['${s.id}']=this.value" placeholder="Leave reason" class="w-full border border-amber-200 bg-white rounded-xl px-3 py-1.5 text-xs">`:''}</div>`;
-  }).join('');
-}
-function setAtt(id,st){localAttendance[id]=st;renderAttendanceView();}
-function markAllAttendance(st){const b=document.getElementById('att-batch-filter').value;appData.students.forEach(s=>{if(b==='ALL'||s.batch===b)localAttendance[s.id]=st;});renderAttendanceView();}
-function submitAttendance(){const d=document.getElementById('att-date').value,b=document.getElementById('att-batch-filter').value,recs=appData.students.filter(s=>b==='ALL'||s.batch===b).map(s=>({id:s.id,name:s.name,batch:s.batch,status:localAttendance[s.id]||'Present',remark:localRemarks[s.id]||''}));showLoader(true);Backend.saveAttendance(d,recs,data=>{appData=data;localAttendance={...data.attendanceMap};localRemarks={...data.attendanceRemarks};renderAll();showLoader(false);showToast('Attendance saved!');},e=>{showLoader(false);showToast(e.message,true);});}
-function openLeaveModal(){if(!appData.students.length)return showToast('Add students first',true);document.getElementById('inp-leave-student').innerHTML=appData.students.map(s=>`<option value="${s.id}">${s.name} (${s.batch})</option>`).join('');openModal('modal-leave');}
-function submitLeaveRange(e){e.preventDefault();const id=document.getElementById('inp-leave-student').value,stu=appData.students.find(s=>s.id===id);closeModal('modal-leave');showLoader(true);Backend.markLeaveRange({studentId:id,studentName:stu.name,batch:stu.batch,fromDate:document.getElementById('inp-leave-from').value,toDate:document.getElementById('inp-leave-to').value,remark:document.getElementById('inp-leave-remark').value,currentDate:document.getElementById('att-date').value},data=>{appData=data;localAttendance={...data.attendanceMap};localRemarks={...data.attendanceRemarks};renderAll();showLoader(false);showToast('Leave saved!');},e=>{showLoader(false);showToast(e.message,true);});}
-
-// --- FEES ---
-function openFeesTabFilter(sub){switchTab('fees');setFeeSubTab(sub);}
-function setFeeSubTab(sub){
-  currentFeeSubTab=sub;
-  const rings={pending:'ring-4 ring-rose-300',paid:'ring-4 ring-emerald-300',ledger:'ring-4 ring-indigo-300'};
-  const base={pending:'g-rose',paid:'g-emerald',ledger:'g-indigo'};
-  ['pending','paid','ledger'].forEach(t=>{document.getElementById('fsub-'+t).className=`${base[t]} text-white text-left p-3 rounded-2xl shadow-md ${t===sub?rings[t]:'opacity-75'}`;});
-  renderFeesTab();
-}
-function renderFeesTab(){
-  const q=(document.getElementById('fee-search')?.value||'').toLowerCase(),bf=document.getElementById('fee-batch-filter')?.value||'ALL';
-  const stuList=appData.students.filter(s=>(bf==='ALL'||s.batch===bf)&&(s.name.toLowerCase().includes(q)||(s.fatherPhone||'').includes(q)));
-  const unpaid=stuList.filter(s=>s.pendingFee>0).sort((a,b)=>b.pendingFee-a.pendingFee),paid=stuList.filter(s=>s.pendingFee<=0);
-  let tc=0,tp=0;stuList.forEach(s=>{tc+=s.totalPaid;if(s.pendingFee>0)tp+=s.pendingFee;});
-  document.getElementById('fee-tab-total').innerText=formatINR(tc+tp);document.getElementById('fee-tab-collected').innerText=formatINR(tc);document.getElementById('fee-tab-pending').innerText=formatINR(tp);
-  document.getElementById('fee-cnt-pending').innerText=unpaid.length+' Unpaid';document.getElementById('fee-amt-pending').innerText=formatINR(tp)+' Due';
-  document.getElementById('fee-cnt-paid').innerText=paid.length+' Paid';document.getElementById('fee-amt-paid').innerText=formatINR(tc)+' Paid';
-  const receipts=appData.recentFees.filter(f=>{const st=appData.students.find(x=>x.id===f.studentId);return(bf==='ALL'||(st&&st.batch===bf))&&(f.studentName.toLowerCase().includes(q)||f.receiptNo.toLowerCase().includes(q));});
-  document.getElementById('fee-cnt-ledger').innerText=receipts.length+' Receipts';
-
-  const box=document.getElementById('fee-subtab-content');
-  if(currentFeeSubTab==='pending'){
-    box.innerHTML=unpaid.length?unpaid.map(s=>`
-      <div class="rounded-2xl border p-3.5 shadow-sm space-y-2 ${s.isOverdue?'border-rose-400 bg-rose-50/60':'border-amber-200 bg-white'}">
-        <div class="flex justify-between items-start gap-2">
-          <div><span class="text-[10px] font-bold px-2 py-0.5 rounded ${s.isOverdue?'bg-rose-600 text-white':'bg-amber-100 text-amber-800'}">${s.isOverdue?'OVERDUE':'DUE'} • ${s.batch}</span><h4 onclick="openStudentDetail('${s.id}')" class="font-extrabold text-sm mt-1 cursor-pointer">${s.name}</h4><p class="text-[11px] text-slate-500">Due Date: <b>${s.nextDueDate||'Now'}</b> • ${s.fatherPhone||'No Phone'}</p></div>
-          <div class="text-right"><p class="text-[10px] text-slate-400 font-bold">PENDING</p><p class="text-base font-extrabold text-rose-600">${formatINR(s.pendingFee)}</p></div>
-        </div>
-        <div class="flex gap-2"><button type="button" onclick="openFeeModal('${s.id}')" class="flex-1 bg-emerald-600 text-white py-2 rounded-xl text-xs font-bold">+ Pay Fee</button><button type="button" onclick="sendWhatsApp('${s.id}','fee')" class="px-3 bg-green-100 text-green-700 py-2 rounded-xl text-xs font-bold"><i class="fa-brands fa-whatsapp mr-1"></i>Remind</button></div>
-      </div>`).join(''):'<p class="bg-white p-6 rounded-2xl text-center text-xs text-slate-400">No pending fees!</p>';
-  }else if(currentFeeSubTab==='paid'){
-    box.innerHTML=paid.length?paid.map(s=>{
-      const lp=appData.recentFees.find(f=>f.studentId===s.id);
-      return`<div class="bg-white rounded-2xl border border-emerald-200 p-3.5 flex justify-between items-center gap-2"><div><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">${s.batch}</span><h4 onclick="openStudentDetail('${s.id}')" class="font-extrabold text-sm mt-1 cursor-pointer">${s.name}</h4><p class="text-[11px] text-slate-500">${lp?`Last Paid: <b>${lp.date}</b> (${lp.month} • ${lp.mode})`:`Running • Next Due: ${s.nextDueDate||'N/A'}`}</p></div><span class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-xl text-xs font-extrabold">${formatINR(s.totalPaid)} Paid</span></div>`;
-    }).join(''):'<p class="bg-white p-6 rounded-2xl text-center text-xs text-slate-400">No paid students yet.</p>';
-  }else{
-    box.innerHTML=receipts.length?receipts.map(f=>`
-      <div onclick="showReceiptModal(${JSON.stringify(f).replace(/"/g,'&quot;')})" class="bg-white rounded-2xl border p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-50">
-        <div><h4 class="font-bold text-sm">${f.studentName}</h4><p class="text-[11px] text-slate-50">${f.date} • ${f.month} • ${f.mode}</p><p class="text-[10px] text-indigo-600 font-bold">${f.receiptNo} (Tap for Receipt)</p></div>
-        <span class="font-extrabold text-sm text-emerald-600">+${formatINR(f.amount)}</span>
-      </div>`).join(''):'<p class="bg-white p-6 rounded-2xl text-center text-xs text-slate-400">No receipts yet.</p>';
-  }
-}
-
-// --- BATCHES ---
-function renderBatches(){
-  const bMap={};
-  (appData.batches||[]).forEach(b=>{bMap[b.name]={...b,count:0,pending:0};});
-  appData.students.forEach(s=>{if(!bMap[s.batch])bMap[s.batch]={id:'AUTO',name:s.batch,timing:'',defaultFee:s.monthlyFee,subject:'',count:0,pending:0};bMap[s.batch].count++;bMap[s.batch].pending+=s.pendingFee;});
-  const list=Object.values(bMap);
-  document.getElementById('batches-grid').innerHTML=list.length?list.map(b=>`
-    <div class="bg-white rounded-2xl border p-4 shadow-sm space-y-3">
-      <div class="flex justify-between items-start">
-        <div onclick="openBatchStudents('${b.name}')" class="cursor-pointer"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-700">${b.timing||'Batch'}</span><h3 class="font-extrabold text-base mt-1 text-slate-800">${b.name}</h3><p class="text-[11px] text-slate-400">${b.subject||'General'}</p></div>
-        ${b.id!=='AUTO'?`<button type="button" onclick="confirmDeleteBatch('${b.id}')" class="text-rose-400 hover:text-rose-600 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>`:''}
-      </div>
-      <div class="grid grid-cols-3 gap-2 text-center text-xs bg-slate-50 p-2 rounded-xl">
-        <div><p class="text-[10px] text-slate-400">Students</p><b class="text-indigo-600">${b.count}</b></div>
-        <div><p class="text-[10px] text-slate-400">Fee/Mo</p><b>${formatINR(b.defaultFee)}</b></div>
-        <div><p class="text-[10px] text-slate-400">Pending</p><b class="text-rose-600">${formatINR(b.pending)}</b></div>
-      </div>
-      <button type="button" onclick="openBatchStudents('${b.name}')" class="w-full bg-indigo-50 text-indigo-700 py-2 rounded-xl text-xs font-bold">View Students in Batch →</button>
-    </div>`).join(''):'<div class="col-span-full bg-white p-8 rounded-2xl text-center text-xs text-slate-400">No batches yet. Tap "+ Create Batch"!</div>';
-}
-function openBatchStudents(bName){document.getElementById('stu-batch-filter').value=bName;switchTab('students');renderStudentsList();}
-function submitNewBatch(e){e.preventDefault();closeModal('modal-add-batch');showLoader(true);Backend.addBatch({name:document.getElementById('inp-bat-name').value,timing:document.getElementById('inp-bat-time').value,defaultFee:document.getElementById('inp-bat-fee').value,subject:document.getElementById('inp-bat-sub').value,currentDate:document.getElementById('att-date').value},data=>{appData=data;renderAll();e.target.reset();showLoader(false);showToast('Batch created!');},err=>{showLoader(false);showToast(err.message,true);});}
-function confirmDeleteBatch(id){if(!confirm('Delete this batch?'))return;showLoader(true);Backend.deleteBatch(id,document.getElementById('att-date').value,data=>{appData=data;renderAll();showLoader(false);showToast('Batch deleted');},err=>{showLoader(false);showToast(err.message,true);});}
-
-// --- STUDENTS GROUPED BY BATCH + OVERDUE RED HIGHLIGHT ---
-function renderStudentsList(){
-  const q=document.getElementById('stu-search').value.toLowerCase(),bf=document.getElementById('stu-batch-filter').value,ff=document.getElementById('stu-fee-filter').value;
-  const list=appData.students.filter(s=>(s.name.toLowerCase().includes(q)||s.fatherName.toLowerCase().includes(q)||s.fatherPhone.includes(q))&&(bf==='ALL'||s.batch===bf)&&(ff==='ALL'||(ff==='OVERDUE'&&s.isOverdue)||(ff==='PENDING'&&s.pendingFee>0)||(ff==='PAID'&&s.pendingFee<=0)));
-  const box=document.getElementById('students-grid');
-  if(!list.length)return box.innerHTML='<div class="bg-white p-8 rounded-2xl text-center text-xs text-slate-400">No students found.</div>';
-
-  const groups={};
-  list.forEach(s=>{if(!groups[s.batch])groups[s.batch]=[];groups[s.batch].push(s);});
-  box.innerHTML=Object.keys(groups).sort().map(bName=>`
-    <div class="space-y-2.5">
-      <div class="flex items-center justify-between px-1">
-        <h3 class="font-extrabold text-xs uppercase tracking-wider text-indigo-700 flex items-center gap-1.5"><i class="fa-solid fa-layer-group"></i> ${bName} (${groups[bName].length})</h3>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        ${groups[bName].map(s=>{
-          const cardCls=s.isOverdue?'border-2 border-rose-400 bg-rose-50/70':'border border-slate-200 bg-white';
-          const badge=s.isOverdue?`<span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-rose-600 text-white">OVERDUE • Due ${s.nextDueDate}</span>`:(s.pendingFee>0?`<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">DUE ${formatINR(s.pendingFee)}</span>`:`<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">CLEAR • Next ${s.nextDueDate||'N/A'}</span>`);
-          return`<div class="rounded-2xl p-3.5 shadow-sm space-y-2.5 ${cardCls}">
-            <div class="flex justify-between items-start"><div class="min-w-0"><div class="flex flex-wrap gap-1">${badge} <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-700">${calcTenure(s.joiningDate)}</span></div><h4 onclick="openStudentDetail('${s.id}')" class="font-extrabold text-base mt-1 truncate cursor-pointer">${s.name}</h4><p class="text-[11px] text-slate-500">Joined: ${s.joiningDate||'N/A'} (${s.joinedClass||s.batch})</p><p class="text-[11px] text-slate-500 truncate">${s.fatherName||'Parent'}: <b>${s.fatherPhone||'N/A'}</b></p></div><button type="button" onclick="openStudentDetail('${s.id}')" class="p-2 bg-white/80 rounded-xl text-xs"><i class="fa-solid fa-eye"></i></button></div>
-            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/70 text-center text-xs"><div><p class="text-[10px] text-slate-400">Paid</p><b class="text-emerald-600">${formatINR(s.totalPaid)}</b></div><div><p class="text-[10px] text-slate-400">Pending</p><b class="${s.pendingFee>0?'text-rose-600':'text-slate-600'}">${formatINR(s.pendingFee)}</b></div><div><p class="text-[10px] text-slate-400">Abs/Leave</p><b class="text-amber-600">${s.absentDays}A / ${s.leaveDays}L</b></div></div>
-            <div class="flex gap-2"><button type="button" onclick="openFeeModal('${s.id}')" class="flex-1 bg-emerald-600 text-white py-2 rounded-xl text-xs font-bold">+ Pay Fee</button>${s.pendingFee>0?`<button type="button" onclick="sendWhatsApp('${s.id}','fee')" class="px-3 bg-green-100 text-green-700 rounded-xl text-xs font-bold"><i class="fa-brands fa-whatsapp"></i></button>`:''}<button type="button" onclick="openStudentDetail('${s.id}')" class="px-3 bg-white text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold">Profile</button></div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`).join('');
-}
-
-function openAdmissionModal(){
-  const sel=document.getElementById('inp-stu-batch-sel');
-  const bList=(appData.batches||[]);
-  sel.innerHTML=bList.map(b=>`<option value="${b.name}" data-fee="${b.defaultFee||0}">${b.name}</option>`).join('')+'<option value="__NEW__">+ Create / Type New Batch</option>';
-  onAdmissionBatchChange();
-  openModal('modal-add-student');
-}
-function onAdmissionBatchChange(){
-  const sel=document.getElementById('inp-stu-batch-sel'),cust=document.getElementById('inp-stu-batch-custom');
-  if(sel.value==='__NEW__'){cust.classList.remove('hidden');cust.required=true;}
-  else{cust.classList.add('hidden');cust.required=false;const opt=sel.options[sel.selectedIndex];if(opt&&opt.dataset.fee&&Number(opt.dataset.fee)>0)document.getElementById('inp-stu-fee').value=opt.dataset.fee;}
-}
-
-function openStudentDetail(id){
-  activeDetailStudentId=id;const s=appData.students.find(x=>x.id===id);if(!s)return;
-  document.getElementById('det-avatar').innerText=s.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('det-name').innerText=s.name;
-  document.getElementById('det-meta').innerText=`${s.id} • ${s.batch} • ${calcTenure(s.joiningDate)}`;
-  setDetTab('profile');openModal('modal-stu-detail');
-}
-function setDetTab(tab){
-  ['profile','fees','tests'].forEach(t=>{document.getElementById('dmod-'+t).className=t===tab?'flex-1 py-2.5 bg-white text-indigo-600 border-b-2 border-indigo-600':'flex-1 py-2.5 text-slate-500';});
-  const s=appData.students.find(x=>x.id===activeDetailStudentId),box=document.getElementById('det-content');
-  if(tab==='profile'){
-    box.innerHTML=`<div class="grid grid-cols-2 gap-2 text-xs"><div class="bg-indigo-50 p-2.5 rounded-xl"><p class="text-[10px] text-indigo-500 font-bold">JOINING DATE</p><b>${s.joiningDate||'Not Set'}</b></div><div class="bg-purple-50 p-2.5 rounded-xl"><p class="text-[10px] text-purple-500 font-bold">DURATION</p><b>${calcTenure(s.joiningDate)}</b></div><div class="bg-slate-50 p-2.5 rounded-xl"><p class="text-[10px] text-slate-400 font-bold">JOINED CLASS</p><b>${s.joinedClass||s.batch}</b></div><div class="bg-slate-50 p-2.5 rounded-xl"><p class="text-[10px] text-slate-400 font-bold">NEXT DUE DATE</p><b class="${s.isOverdue?'text-rose-600':''}">${s.nextDueDate||'N/A'}</b></div></div><div class="border rounded-xl p-3 text-xs space-y-1"><div><b>Father:</b> ${s.fatherName||'N/A'} (${s.fatherPhone||'N/A'})</div><div><b>Mother:</b> ${s.motherName||'N/A'} (${s.motherPhone||'N/A'})</div><div><b>Address:</b> ${s.address||'N/A'}</div></div><div class="flex gap-2"><button type="button" onclick="sendWhatsApp('${s.id}','fee')" class="flex-1 bg-green-500 text-white py-2.5 rounded-xl text-xs font-bold">WhatsApp Parent</button><button type="button" onclick="confirmDeleteStudent('${s.id}')" class="px-4 bg-rose-50 text-rose-600 py-2.5 rounded-xl text-xs font-bold">Remove</button></div>`;
-  }else if(tab==='fees'){
-    const mf=appData.recentFees.filter(f=>f.studentId===s.id);
-    box.innerHTML=`<div class="grid grid-cols-3 gap-2 text-center text-xs"><div class="bg-slate-50 p-2 rounded-xl">Billed<br><b>${formatINR(s.totalPayable)}</b></div><div class="bg-emerald-50 p-2 rounded-xl">Paid<br><b class="text-emerald-600">${formatINR(s.totalPaid)}</b></div><div class="bg-rose-50 p-2 rounded-xl">Pending<br><b class="text-rose-600">${formatINR(s.pendingFee)}</b></div></div><div class="grid grid-cols-2 gap-2 text-xs"><div><label class="text-[10px] text-slate-400 font-bold">MANUAL PAYABLE ₹</label><input type="number" id="det-payable-inp" value="${s.manualPayable||0}" class="w-full border rounded-xl px-2.5 py-1.5 font-bold"></div><div><label class="text-[10px] text-slate-400 font-bold">DISCOUNT ₹</label><input type="number" id="det-discount-inp" value="${s.discount||0}" class="w-full border rounded-xl px-2.5 py-1.5 font-bold"></div></div><button type="button" onclick="saveUpdatedBilling()" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold">Update Billing / Discount</button><div class="divide-y max-h-36 overflow-y-auto">${mf.length?mf.map(f=>`<div class="py-2 flex justify-between text-xs"><span>${f.date} • ${f.month}</span><b class="text-emerald-600">+${formatINR(f.amount)}</b></div>`).join(''):'<p class="text-center text-xs text-slate-400 py-3">No payments.</p>'}</div>`;
-  }else{
-    const mm=appData.testMarks.filter(m=>m.studentId===s.id);
-    box.innerHTML=mm.length?`<div class="divide-y">${mm.map(m=>`<div class="py-2 flex justify-between text-xs"><div><b>${m.testName}</b><p class="text-[10px] text-slate-400">${m.date}</p></div><div class="text-right"><b class="text-purple-700">${m.obtained}/${m.maxMarks}</b><p class="text-[10px]">${Math.round((m.obtained/m.maxMarks)*100)}%</p></div></div>`).join('')}</div>`:'<p class="text-center text-xs text-slate-400 py-6">No test marks yet.</p>';
-  }
-}
-
-// --- TESTS & DATE-WISE RESULTS ---
-function renderTestsList(){
-  const df=document.getElementById('test-date-filter')?.value||'',bf=document.getElementById('test-batch-filter')?.value||'ALL';
-  const list=appData.tests.filter(t=>(!df||t.date===df)&&(bf==='ALL'||t.batch===bf));
-  document.getElementById('tests-grid').innerHTML=list.length?list.map(t=>{
-    const m=appData.testMarks.filter(x=>x.testId===t.testId),avg=m.length?Math.round(m.reduce((a,b)=>a+b.obtained,0)/m.length):0;
-    return`<div onclick="openTestView('${t.testId}')" class="bg-white rounded-2xl border p-4 cursor-pointer space-y-2"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-700">${t.subject} • ${t.batch}</span><div class="flex justify-between"><h3 class="font-extrabold text-sm">${t.testName}</h3><span class="text-xs font-bold bg-slate-100 px-2 py-0.5 rounded">Max ${t.maxMarks}</span></div><div class="pt-2 border-t flex justify-between text-xs font-bold text-slate-500"><span><i class="fa-regular fa-calendar mr-1"></i>${t.date}</span><span class="text-purple-600">Avg: ${avg}/${t.maxMarks} →</span></div></div>`;
-  }).join(''):'<div class="col-span-full bg-white p-8 rounded-2xl text-center text-xs text-slate-400">No tests found for selected date/batch.</div>';
-}
-function openNewTestModal(){if(!appData.students.length)return showToast('Add students first',true);renderTestMarksInputs();openModal('modal-new-test');}
-function renderTestMarksInputs(){const b=document.getElementById('inp-test-batch').value,list=appData.students.filter(s=>b==='ALL'||s.batch===b);document.getElementById('test-marks-inputs').innerHTML=list.map(s=>`<div class="flex justify-between items-center p-2"><span class="text-xs font-bold">${s.name}</span><input type="number" data-stuid="${s.id}" data-stuname="${s.name}" min="0" placeholder="Marks" class="test-mark-inp w-20 border rounded-lg px-2 py-1 text-xs font-bold text-center"></div>`).join('');}
-function submitTestMarks(e){e.preventDefault();const ml=[];document.querySelectorAll('.test-mark-inp').forEach(i=>{if(i.value!=='')ml.push({studentId:i.dataset.stuid,studentName:i.dataset.stuname,obtained:Number(i.value)});});if(!ml.length)return showToast('Enter marks for at least 1 student',true);closeModal('modal-new-test');showLoader(true);Backend.saveTestWithMarks({testName:document.getElementById('inp-test-name').value,subject:document.getElementById('inp-test-sub').value,batch:document.getElementById('inp-test-batch').value,maxMarks:Number(document.getElementById('inp-test-max').value)||100,date:document.getElementById('inp-test-date').value,marksList:ml,currentDate:document.getElementById('att-date').value},data=>{appData=data;renderAll();e.target.reset();showLoader(false);showToast('Test saved!');},e=>{showLoader(false);showToast(e.message,true);});}
-
-function openTestView(tid){activeTestId=tid;setTestViewTab('all');openModal('modal-test-view');}
-function setTestViewTab(tab){
-  currentTestTab=tab;
-  const t=appData.tests.find(x=>x.testId===activeTestId);if(!t)return;
-  const allMarks=appData.testMarks.filter(m=>m.testId===activeTestId).sort((a,b)=>b.obtained-a.obtained);
-  const passed=allMarks.filter(m=>(m.obtained/t.maxMarks)*100>=40),failed=allMarks.filter(m=>(m.obtained/t.maxMarks)*100<40);
-  document.getElementById('vtab-all').innerText=`All (${allMarks.length})`;
-  document.getElementById('vtab-pass').innerText=`Passed (${passed.length})`;
-  document.getElementById('vtab-fail').innerText=`Low Score (${failed.length})`;
-  document.getElementById('vtab-all').className=tab==='all'?'bg-indigo-600 text-white py-2 rounded-xl text-[11px] font-extrabold':'bg-white text-slate-600 py-2 rounded-xl text-[11px] font-extrabold';
-  document.getElementById('vtab-pass').className=tab==='pass'?'bg-emerald-600 text-white py-2 rounded-xl text-[11px] font-extrabold':'bg-white text-emerald-700 py-2 rounded-xl text-[11px] font-extrabold';
-  document.getElementById('vtab-fail').className=tab==='fail'?'bg-rose-600 text-white py-2 rounded-xl text-[11px] font-extrabold':'bg-white text-rose-600 py-2 rounded-xl text-[11px] font-extrabold';
-
-  document.getElementById('vt-title').innerText=t.testName;
-  document.getElementById('vt-meta').innerText=`${t.date} • ${t.subject} • Max ${t.maxMarks}`;
-  const list=tab==='pass'?passed:(tab==='fail'?failed:allMarks);
-  document.getElementById('vt-body').innerHTML=list.length?list.map((m,i)=>{
-    const pct=Math.round((m.obtained/t.maxMarks)*100);
-    return`<div class="py-2.5 flex justify-between items-center text-xs"><div><span class="px-1.5 py-0.5 rounded bg-slate-100 font-bold mr-1.5">#${i+1}</span><b>${m.studentName}</b></div><div class="flex items-center gap-2"><span class="font-extrabold ${pct>=40?'text-emerald-600':'text-rose-600'}">${m.obtained}/${t.maxMarks} (${pct}%)</span><button type="button" onclick="sendTestWhatsApp('${m.studentId}','${t.testName}',${m.obtained},${t.maxMarks})" class="bg-green-50 text-green-600 p-1.5 rounded-lg"><i class="fa-brands fa-whatsapp"></i></button></div></div>`;
-  }).join(''):'<p class="p-6 text-center text-xs text-slate-400">No students in this list.</p>';
-  document.getElementById('vt-del-btn').onclick=()=>{if(!confirm('Delete test?'))return;closeModal('modal-test-view');showLoader(true);Backend.deleteTest(activeTestId,document.getElementById('att-date').value,data=>{appData=data;renderAll();showLoader(false);showToast('Deleted');},e=>{showLoader(false);showToast(e.message,true);});};
-}
-
-function renderReports(){
-  const ms=getMonthlyStats(),tm=ms[5],lm=ms[4],fd=tm.feeSum-lm.feeSum,sd=tm.stuCount-lm.stuCount;
-  document.getElementById('rep-this-fee').innerText=formatINR(tm.feeSum);document.getElementById('rep-last-fee').innerText=formatINR(lm.feeSum);
-  document.getElementById('rep-fee-badge').innerText=(fd>=0?'+':'')+formatINR(fd);
-  const mf=Math.max(...ms.map(m=>m.feeSum),1);
-  document.getElementById('rep-fee-bars').innerHTML=ms.map(m=>`<div><div class="flex justify-between text-xs font-bold"><span>${m.label}</span><span>${formatINR(m.feeSum)}</span></div><div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-full bg-emerald-500 rounded-full" style="width:${Math.round((m.feeSum/mf)*100)}%"></div></div></div>`).join('');
-  document.getElementById('rep-this-stu').innerText=tm.stuCount;document.getElementById('rep-last-stu').innerText=lm.stuCount;
-  document.getElementById('rep-stu-badge').innerText=(sd>=0?'+':'')+sd;
-  const mstu=Math.max(...ms.map(m=>m.stuCount),1);
-  document.getElementById('rep-stu-bars').innerHTML=ms.map(m=>`<div><div class="flex justify-between text-xs font-bold"><span>${m.label}</span><span>${m.stuCount}</span></div><div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-full bg-indigo-500 rounded-full" style="width:${Math.round((m.stuCount/mstu)*100)}%"></div></div></div>`).join('');
-}
-
-function submitNewStudent(e){
-  e.preventDefault();
-  const sel=document.getElementById('inp-stu-batch-sel'),batchVal=sel.value==='__NEW__'?document.getElementById('inp-stu-batch-custom').value:sel.value;
-  closeModal('modal-add-student');showLoader(true);
-  Backend.addStudent({name:document.getElementById('inp-stu-name').value,batch:batchVal||'General',joinedClass:document.getElementById('inp-stu-jclass').value,joiningDate:document.getElementById('inp-stu-jdate').value,fatherName:document.getElementById('inp-stu-fname').value,fatherPhone:document.getElementById('inp-stu-fphone').value,motherName:document.getElementById('inp-stu-mname').value,motherPhone:document.getElementById('inp-stu-mphone').value,studentPhone:document.getElementById('inp-stu-fphone').value,monthlyFee:document.getElementById('inp-stu-fee').value,openingPayable:document.getElementById('inp-stu-payable').value,address:document.getElementById('inp-stu-addr').value,currentDate:document.getElementById('att-date').value},data=>{appData=data;renderAll();e.target.reset();document.getElementById('inp-stu-jdate').value=todayISO;document.getElementById('inp-stu-payable').value=0;showLoader(false);showToast('Admission saved!');},err=>{showLoader(false);showToast(err.message,true);});
-}
-function openFeeModal(id){if(!appData.students.length)return showToast('Add students first',true);const s=document.getElementById('inp-fee-student');s.innerHTML=appData.students.map(x=>`<option value="${x.id}">${x.name} (${x.batch}) - Due ₹${x.pendingFee}</option>`).join('');if(id)s.value=id;onFeeStudentSelect();openModal('modal-collect-fee');}
-function onFeeStudentSelect(){const s=appData.students.find(x=>x.id===document.getElementById('inp-fee-student').value);if(s){document.getElementById('fee-stu-balance-hint').innerText=`Pending: ${formatINR(s.pendingFee)} | Monthly: ${formatINR(s.monthlyFee)}`;document.getElementById('inp-fee-amount').value=s.pendingFee>0?s.pendingFee:s.monthlyFee;}}
-function submitFee(e){e.preventDefault();const id=document.getElementById('inp-fee-student').value,s=appData.students.find(x=>x.id===id);closeModal('modal-collect-fee');showLoader(true);Backend.recordFee({studentId:id,studentName:s?s.name:'',amount:document.getElementById('inp-fee-amount').value,mode:document.getElementById('inp-fee-mode').value,month:document.getElementById('inp-fee-month').value,date:document.getElementById('inp-fee-date').value,currentDate:document.getElementById('att-date').value},data=>{appData=data;renderAll();showLoader(false);showToast('Receipt saved!');if(data.lastReceipt)showReceiptModal(data.lastReceipt);},err=>{showLoader(false);showToast(err.message,true);});}
-
-function showReceiptModal(r){
-  const stu=appData.students.find(x=>x.id===r.studentId);
-  document.getElementById('receipt-body').innerHTML=`
-    <div class="text-center border-b pb-3"><h4 class="font-extrabold text-base text-slate-800">${appData.instituteName}</h4><p class="text-[11px] text-slate-400">Official Tuition Fee Receipt</p></div>
-    <div class="space-y-1.5 bg-slate-50 p-3 rounded-xl">
-      <div class="flex justify-between"><span>Receipt No:</span><b>${r.receiptNo}</b></div>
-      <div class="flex justify-between"><span>Date:</span><b>${r.date}</b></div>
-      <div class="flex justify-between"><span>Student:</span><b>${r.studentName}</b></div>
-      <div class="flex justify-between"><span>Month:</span><b>${r.month}</b></div>
-      <div class="flex justify-between"><span>Mode:</span><b>${r.mode}</b></div>
-      <div class="flex justify-between text-sm pt-2 border-t"><b>Amount Paid:</b><b class="text-emerald-600">${formatINR(r.amount)}</b></div>
-    </div>
-    <button type="button" onclick="sendReceiptWhatsApp('${r.studentId}','${r.receiptNo}',${r.amount},'${r.month}','${r.date}')" class="w-full bg-green-500 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-base"></i> Send Receipt on WhatsApp</button>
-  `;
-  openModal('modal-receipt');
-}
-
-function runMonthlyBilling(){const b=document.getElementById('bill-batch-select').value;if(!confirm('Add extra monthly fee to students?'))return;showLoader(true);Backend.billNewMonth(b,document.getElementById('att-date').value,data=>{appData=data;renderAll();showLoader(false);showToast(`Billed ${data.billedCount} students!`);},e=>{showLoader(false);showToast(e.message,true);});}
-function saveUpdatedBilling(){closeModal('modal-stu-detail');showLoader(true);Backend.updateStudentBilling(activeDetailStudentId,document.getElementById('det-payable-inp').value,document.getElementById('det-discount-inp').value,document.getElementById('att-date').value,data=>{appData=data;renderAll();showLoader(false);showToast('Billing updated!');},e=>{showLoader(false);showToast(e.message,true);});}
-function confirmDeleteStudent(id){if(!confirm('Remove student?'))return;closeModal('modal-stu-detail');showLoader(true);Backend.deleteStudent(id,document.getElementById('att-date').value,data=>{appData=data;renderAll();showLoader(false);showToast('Removed');},e=>{showLoader(false);showToast(e.message,true);});}
-function openEditInstitute(){const n=prompt('Institute Name:',appData.instituteName);if(n&&n.trim()){showLoader(true);Backend.saveInstituteName(n,document.getElementById('att-date').value,data=>{appData=data;renderAll();showLoader(false);showToast('Updated!');},e=>{showLoader(false);showToast(e.message,true);});}}
-
-function getPhone(id){const s=appData.students.find(x=>x.id===id),rp=(s&&(s.fatherPhone||s.studentPhone||s.motherPhone))||'';let ph=rp.replace(/\D/g,'');if(ph.length===10)ph='91'+ph;return{s,ph};}
-function sendWhatsApp(id,type){
-  const {s,ph}=getPhone(id);if(!ph)return showToast('No phone saved',true);
-  const msg=type==='absent'?`Hello, *${s.name}* (${s.batch}) is marked *ABSENT* today (${document.getElementById('att-date').value}) at *${appData.instituteName}*.`:`Hello, gentle fee reminder from *${appData.instituteName}* for *${s.name}* (${s.batch}).\nPending Fee: *₹${s.pendingFee}*\nDue Date: ${s.nextDueDate||'Immediate'}\nThank you!`;
-  window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`,'_blank');
-}
-function sendReceiptWhatsApp(id,recNo,amt,mo,dt){
-  const {s,ph}=getPhone(id);if(!ph)return showToast('No phone saved',true);
-  const msg=`*${appData.instituteName}*\nFee Receipt: *${recNo}*\nStudent: *${s?s.name:''}*\nAmount Paid: *₹${amt}*\nMonth: ${mo}\nDate: ${dt}\nRemaining Balance: ₹${s?s.pendingFee:0}\nThank you!`;
-  window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`,'_blank');
-}
-function sendTestWhatsApp(id,tName,obt,max){
-  const {s,ph}=getPhone(id);if(!ph)return showToast('No phone saved',true);
-  const pct=Math.round((obt/max)*100);
-  const msg=`*${appData.instituteName}* - Test Result\nStudent: *${s?s.name:''}*\nTest: *${tName}*\nMarks: *${obt}/${max} (${pct}%)*`;
-  window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`,'_blank');
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  ['att-date','inp-fee-date','inp-stu-jdate','inp-leave-from','inp-leave-to','inp-test-date'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=todayISO;});
-  const m=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  document.getElementById('inp-fee-month').value=m[nowD.getMonth()]+' '+nowD.getFullYear();
-  if(!gasUrl){document.getElementById('demo-banner').classList.remove('hidden');fetchData(todayISO);openModal('modal-connect');}
-  else{document.getElementById('inp-gas-url').value=gasUrl;fetchData(todayISO);}
-});
-</script>
-</body>
-</html>
+        <button type="button" onclick="openFeeModal('${x.id}')" class="bg-emerald-600 text-white px-2 py-1 rounded-lg text-[11px] font-bold">P
