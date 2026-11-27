@@ -3,422 +3,331 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Coaching Institute Pro Portal</title>
+<title>AK Learning Hub — Tuition Management</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <style>
-  html,body{font-family:system-ui,-apple-system,sans-serif;background:#f1f5f9;max-width:100%;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+  html,body{font-family:'Inter',sans-serif;background:#FAF9F6;color:#0F172A;max-width:100%;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+  h1,h2,h3,h4,.font-heading{font-family:'Poppins',sans-serif}
   .hidden{display:none!important}
-  .hero-grad{background:linear-gradient(135deg,#1e1b4b,#4338ca,#7c3aed)}
-  .g-emerald{background:linear-gradient(135deg,#059669,#10b981)}
-  .g-teal{background:linear-gradient(135deg,#0d9488,#06b6d4)}
-  .g-indigo{background:linear-gradient(135deg,#4f46e5,#2563eb)}
-  .g-sky{background:linear-gradient(135deg,#0284c7,#38bdf8)}
-  .g-purple{background:linear-gradient(135deg,#7c3aed,#a855f7)}
-  .g-rose{background:linear-gradient(135deg,#e11d48,#f97316)}
-  .g-amber{background:linear-gradient(135deg,#d97706,#f59e0b)}
-  .tab-active{color:#4f46e5;border-bottom:3px solid #4f46e5;font-weight:800}
-  .modal-bg{background:rgba(15,23,42,.65);backdrop-filter:blur(4px)}
+  .navy-bg{background:#0F172A}
+  .navy-card{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%)}
+  .gold-text{color:#D4AF37}
+  .gold-bg{background:linear-gradient(135deg,#D4AF37 0%,#F59E0B 100%)}
+  .snav-active{background:rgba(212,175,55,0.16);color:#FDE68A;border-left:3px solid #D4AF37;font-weight:700}
+  .modal-bg{background:rgba(15,23,42,0.7);backdrop-filter:blur(4px)}
+  .card-soft{background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 2px 10px rgba(15,23,42,0.04)}
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:4px}
 </style>
 </head>
-<body class="text-slate-800 pb-24 md:pb-10">
+<body class="antialiased">
 
-<div id="demo-banner" class="hidden bg-amber-300 text-amber-950 text-center text-xs font-bold py-1.5 px-3">
-  Demo Mode — <button type="button" onclick="openModal('modal-connect')" class="underline font-extrabold">Connect Google Sheet</button>
+<!-- LOADER -->
+<div id="loader" class="fixed inset-0 z-[70] hidden flex-col items-center justify-center bg-white/85 backdrop-blur-sm">
+  <div class="w-11 h-11 border-4 border-slate-200 border-t-[#0F172A] rounded-full animate-spin"></div>
+  <p class="mt-3 text-xs font-bold text-slate-700">Syncing AK Learning Hub...</p>
 </div>
 
-<div id="loader" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-white/85">
-  <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-  <p class="mt-2 text-xs font-bold text-indigo-900">Syncing Data...</p>
-</div>
-
-<div id="toast" class="fixed top-3 left-3 right-3 sm:left-auto sm:right-4 z-50 hidden">
-  <div class="flex items-center gap-2 px-4 py-3 rounded-2xl shadow-xl bg-slate-900 text-white text-xs font-semibold">
-    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg">Done</span>
+<!-- TOAST -->
+<div id="toast" class="fixed top-4 right-4 left-4 sm:left-auto z-[80] hidden">
+  <div class="flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl bg-[#0F172A] text-white text-xs sm:text-sm font-medium border border-amber-400/30">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-amber-400"></i>
+    <span id="toast-msg">Done</span>
   </div>
 </div>
 
-<header class="hero-grad text-white shadow-lg sticky top-0 z-30">
-  <div class="max-w-6xl mx-auto px-3.5 py-3 flex items-center justify-between gap-2">
-    <div class="flex items-center gap-2.5 min-w-0">
-      <div onclick="switchTab('dashboard')" class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0 cursor-pointer"><i class="fa-solid fa-graduation-cap text-lg text-amber-300"></i></div>
+<!-- SECURE LOGIN SCREEN -->
+<div id="auth-screen" class="min-h-screen navy-bg flex items-center justify-center p-4">
+  <div class="bg-[#FAF9F6] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-amber-400/30">
+    <div class="navy-card p-6 text-center text-white border-b border-amber-400/20">
+      <div class="w-14 h-14 mx-auto rounded-2xl gold-bg text-[#0F172A] flex items-center justify-center shadow-lg mb-3">
+        <i class="fa-solid fa-graduation-cap text-2xl"></i>
+      </div>
+      <h1 class="text-xl font-extrabold tracking-tight">AK Learning Hub</h1>
+      <p class="text-xs text-slate-300 mt-1">Tuition Management Portal • Secure Admin Login</p>
+    </div>
+    <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
+      <div id="login-url-wrap">
+        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Google Script Web App URL *</label>
+        <input type="url" id="login-url" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full border border-slate-300 bg-white rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-amber-500">
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Username</label>
+        <input type="text" id="login-user" required value="admin" class="w-full border border-slate-300 bg-white rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#0F172A]">
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Password</label>
+        <input type="password" id="login-pass" required placeholder="Enter password (default: ak1234)" class="w-full border border-slate-300 bg-white rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#0F172A]">
+      </div>
+      <p id="login-err" class="hidden text-xs font-bold text-rose-600 bg-rose-50 p-2.5 rounded-xl"></p>
+      <button type="submit" class="w-full navy-bg hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-lock text-amber-400"></i> Sign In to Dashboard
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APP SHELL -->
+<div id="app-shell" class="hidden min-h-screen flex flex-col md:flex-row">
+
+  <!-- DESKTOP SIDEBAR -->
+  <aside class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 navy-bg text-slate-300 z-30 border-r border-slate-800">
+    <div class="p-5 flex items-center gap-3 border-b border-slate-800">
+      <div class="w-10 h-10 rounded-xl gold-bg text-[#0F172A] flex items-center justify-center shrink-0 shadow">
+        <i class="fa-solid fa-graduation-cap text-lg"></i>
+      </div>
       <div class="min-w-0">
-        <div class="flex items-center gap-1">
-          <h1 id="inst-title" class="text-sm sm:text-lg font-extrabold truncate">Coaching Academy</h1>
-          <button type="button" onclick="openEditInstitute()" class="text-indigo-200 text-xs p-1"><i class="fa-solid fa-pen"></i></button>
+        <h2 class="text-white font-extrabold text-sm tracking-tight truncate">AK Learning Hub</h2>
+        <p class="text-[10px] text-amber-400 font-semibold">Commercial Tuition Suite</p>
+      </div>
+    </div>
+    <nav class="flex-1 p-3 space-y-1 text-sm font-medium overflow-y-auto">
+      <button type="button" onclick="navTo('dashboard')" id="snav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition snav-active"><i class="fa-solid fa-chart-pie w-4"></i> Dashboard</button>
+      <button type="button" onclick="navTo('students')" id="snav-students" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-user-graduate w-4"></i> Students</button>
+      <button type="button" onclick="navTo('batches')" id="snav-batches" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-layer-group w-4"></i> Batches</button>
+      <button type="button" onclick="navTo('fees')" id="snav-fees" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-indian-rupee-sign w-4"></i> Fees</button>
+      <button type="button" onclick="navTo('attendance')" id="snav-attendance" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-calendar-check w-4"></i> Attendance</button>
+      <button type="button" onclick="navTo('tests')" id="snav-tests" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-file-pen w-4"></i> Tests & Results</button>
+      <button type="button" onclick="navTo('reports')" id="snav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-chart-column w-4"></i> Reports & Analytics</button>
+    </nav>
+    <div class="p-3 border-t border-slate-800 space-y-1 text-xs">
+      <button type="button" onclick="openSettingsModal()" class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-gear text-amber-400"></i> Security & Sheet</button>
+      <button type="button" onclick="logout()" class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl hover:bg-rose-950/50 text-rose-400"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT AREA -->
+  <div class="flex-1 md:pl-64 flex flex-col min-w-0 pb-20 md:pb-8">
+    <!-- TOP BAR -->
+    <header class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-20 px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="md:hidden w-9 h-9 rounded-xl navy-bg text-amber-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="min-w-0">
+          <h1 id="page-title" class="text-sm sm:text-lg font-extrabold text-[#0F172A] truncate">Dashboard</h1>
+          <p id="page-sub" class="text-[10px] sm:text-xs text-slate-500 truncate">AK Learning Hub Overview</p>
         </div>
-        <p class="text-[10px] text-indigo-200">Institute Management System</p>
       </div>
-    </div>
-    <div class="flex items-center gap-1.5 shrink-0">
-      <button type="button" onclick="openModal('modal-connect')" class="bg-white/15 text-white p-2 rounded-xl text-xs" title="Sheet Settings"><i class="fa-solid fa-gear"></i></button>
-      <button type="button" onclick="openAdmissionModal()" class="bg-white text-indigo-700 px-2.5 py-2 rounded-xl text-xs font-bold shadow"><i class="fa-solid fa-user-plus"></i></button>
-      <button type="button" onclick="openFeeModal('')" class="bg-emerald-500 text-white px-2.5 py-2 rounded-xl text-xs font-bold shadow"><i class="fa-solid fa-indian-rupee-sign"></i> Pay</button>
-    </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button type="button" onclick="openStudentModal(null)" class="navy-bg hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-user-plus text-amber-400"></i> <span class="hidden sm:inline">Add Student</span>
+        </button>
+        <button type="button" onclick="openFeeModal('')" class="gold-bg hover:opacity-95 text-[#0F172A] px-3 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1 shadow-sm">
+          <i class="fa-solid fa-indian-rupee-sign"></i> <span>Pay Fee</span>
+        </button>
+        <button type="button" onclick="openSettingsModal()" class="md:hidden p-2 rounded-xl bg-slate-100 text-slate-700 text-xs"><i class="fa-solid fa-gear"></i></button>
+      </div>
+    </header>
+
+    <main class="p-3.5 sm:p-6 max-w-7xl w-full mx-auto space-y-5">
+      <section id="sec-dashboard" class="space-y-5"></section>
+      <section id="sec-students" class="hidden space-y-4"></section>
+      <section id="sec-batches" class="hidden space-y-4"></section>
+      <section id="sec-fees" class="hidden space-y-4"></section>
+      <section id="sec-attendance" class="hidden space-y-4"></section>
+      <section id="sec-tests" class="hidden space-y-4"></section>
+      <section id="sec-reports" class="hidden space-y-4"></section>
+    </main>
   </div>
-  <div class="hidden md:block bg-white text-slate-600 border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 flex gap-5 text-sm font-semibold overflow-x-auto">
-      <button type="button" onclick="switchTab('dashboard')" id="dtab-dashboard" class="py-3 tab-active whitespace-nowrap">Home</button>
-      <button type="button" onclick="switchTab('fees')" id="dtab-fees" class="py-3 whitespace-nowrap">Fees</button>
-      <button type="button" onclick="switchTab('attendance')" id="dtab-attendance" class="py-3 whitespace-nowrap">Attendance</button>
-      <button type="button" onclick="switchTab('batches')" id="dtab-batches" class="py-3 whitespace-nowrap">Batches</button>
-      <button type="button" onclick="switchTab('students')" id="dtab-students" class="py-3 whitespace-nowrap">Students</button>
-      <button type="button" onclick="switchTab('tests')" id="dtab-tests" class="py-3 whitespace-nowrap">Tests & Results</button>
-      <button type="button" onclick="switchTab('reports')" id="dtab-reports" class="py-3 whitespace-nowrap">Reports</button>
+
+  <!-- MOBILE BOTTOM NAV (7 TABS) -->
+  <nav class="md:hidden fixed bottom-0 inset-x-0 bg-[#0F172A] text-slate-400 border-t border-slate-800 grid grid-cols-7 py-1.5 px-0.5 z-30">
+    <button type="button" onclick="navTo('dashboard')" id="mnav-dashboard" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-amber-400"><i class="fa-solid fa-chart-pie text-xs mb-0.5"></i><span>Home</span></button>
+    <button type="button" onclick="navTo('students')" id="mnav-students" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-user-graduate text-xs mb-0.5"></i><span>Students</span></button>
+    <button type="button" onclick="navTo('batches')" id="mnav-batches" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-layer-group text-xs mb-0.5"></i><span>Batches</span></button>
+    <button type="button" onclick="navTo('fees')" id="mnav-fees" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-indian-rupee-sign text-xs mb-0.5"></i><span>Fees</span></button>
+    <button type="button" onclick="navTo('attendance')" id="mnav-attendance" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-calendar-check text-xs mb-0.5"></i><span>Attend</span></button>
+    <button type="button" onclick="navTo('tests')" id="mnav-tests" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-file-pen text-xs mb-0.5"></i><span>Tests</span></button>
+    <button type="button" onclick="navTo('reports')" id="mnav-reports" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-chart-column text-xs mb-0.5"></i><span>Reports</span></button>
+  </nav>
+</div>
+
+<!-- MODAL: ADD / EDIT STUDENT -->
+<div id="modal-student" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[88vh] overflow-y-auto">
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center sticky top-0 z-10">
+      <h3 id="stu-modal-title" class="font-bold text-sm">Add Student</h3>
+      <button type="button" onclick="closeModal('modal-student')"><i class="fa-solid fa-xmark"></i></button>
     </div>
+    <form onsubmit="saveStudentForm(event)" class="p-4 space-y-3 text-xs">
+      <input type="hidden" id="f-stu-admno">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Full Name *</label><input type="text" id="f-stu-name" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Class *</label><input type="text" id="f-stu-class" required placeholder="e.g., Class 10th" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Father's Name</label><input type="text" id="f-stu-father" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Mother's Name</label><input type="text" id="f-stu-mother" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Student Mobile</label><input type="tel" id="f-stu-sphone" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Parent Mobile *</label><input type="tel" id="f-stu-pphone" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Subjects</label><input type="text" id="f-stu-subjects" placeholder="Math, Science" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Monthly Fee (₹) *</label><input type="number" id="f-stu-fee" required min="0" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
+      </div>
+      <div>
+        <label class="font-bold text-slate-500">Assign Batches (Multiple Allowed)</label>
+        <div id="f-stu-batches-wrap" class="flex flex-wrap gap-1.5 mt-1.5 p-2.5 bg-slate-50 rounded-xl border"></div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div><label class="font-bold text-slate-500">Joining Date *</label><input type="date" id="f-stu-jdate" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
+        <div><label class="font-bold text-slate-500">Status</label><select id="f-stu-status" class="w-full border rounded-xl px-2 py-2 mt-1 bg-white font-bold"><option>Active</option><option>Inactive</option><option>Left</option></select></div>
+        <div><label class="font-bold text-slate-500">Leaving Date</label><input type="date" id="f-stu-ldate" class="w-full border rounded-xl px-2 py-2 mt-1"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Address</label><input type="text" id="f-stu-address" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Photo URL (Optional)</label><input type="url" id="f-stu-photo" placeholder="https://..." class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      </div>
+      <div><label class="font-bold text-slate-500">Notes</label><input type="text" id="f-stu-notes" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <button type="submit" class="w-full navy-bg text-white font-bold py-3 rounded-xl shadow">Save Student</button>
+    </form>
   </div>
-</header>
+</div>
 
-<main class="max-w-6xl mx-auto px-3 py-4 space-y-4">
+<!-- MODAL: STUDENT PROFILE -->
+<div id="modal-student-profile" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-5 justify-center p-3 overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+    <div id="prof-header" class="px-5 py-4 navy-bg text-white flex justify-between items-center"></div>
+    <div id="prof-tabs" class="flex border-b bg-slate-50 text-xs font-bold overflow-x-auto"></div>
+    <div id="prof-body" class="p-4 sm:p-5 overflow-y-auto space-y-4"></div>
+  </div>
+</div>
 
-  <!-- 1. HOME -->
-  <section id="sec-dashboard" class="space-y-4">
-    <div id="dash-unmarked-alert" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-      <div><h4 class="font-bold text-amber-950 text-xs">Unmarked Attendance Alert</h4><p id="dash-unmarked-text" class="text-[11px] text-amber-800"></p></div>
-      <div id="dash-unmarked-btns" class="flex flex-wrap gap-1.5"></div>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-      <button type="button" onclick="switchTab('fees')" class="g-emerald text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
-        <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-emerald-100">Fees</span><i class="fa-solid fa-indian-rupee-sign bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-fee-collected" class="text-base sm:text-lg font-extrabold">₹0 Paid</p><p id="btn-fee-pending" class="text-[11px] text-emerald-50 font-semibold">₹0 Pending →</p></div>
-      </button>
-      <button type="button" onclick="switchTab('attendance')" class="g-teal text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
-        <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-teal-100">Attendance</span><i class="fa-solid fa-calendar-check bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-att-main" class="text-base sm:text-lg font-extrabold">0 Present</p><p id="btn-att-sub" class="text-[11px] text-teal-50 font-semibold">0 Abs • 0 Leave →</p></div>
-      </button>
-      <button type="button" onclick="switchTab('students')" class="g-indigo text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
-        <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-indigo-100">Students</span><i class="fa-solid fa-users bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-stu-count" class="text-base sm:text-lg font-extrabold">0 Students</p><p class="text-[11px] text-indigo-100 font-semibold">Batch-wise List →</p></div>
-      </button>
-      <button type="button" onclick="switchTab('batches')" class="g-sky text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
-        <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-sky-100">Batches</span><i class="fa-solid fa-layer-group bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-bat-count" class="text-base sm:text-lg font-extrabold">0 Batches</p><p class="text-[11px] text-sky-50 font-semibold">Create / Edit →</p></div>
-      </button>
-      <button type="button" onclick="switchTab('tests')" class="g-purple text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
-        <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-purple-100">Tests & Results</span><i class="fa-solid fa-file-pen bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-test-count" class="text-base sm:text-lg font-extrabold">0 Tests</p><p class="text-[11px] text-purple-100 font-semibold">Date-wise Results →</p></div>
-      </button>
-      <button type="button" onclick="switchTab('reports')" class="g-rose text-white text-left p-3.5 rounded-2xl shadow-md flex flex-col justify-between min-h-[105px]">
-        <div class="flex justify-between w-full"><span class="text-[11px] font-extrabold uppercase text-rose-100">Reports</span><i class="fa-solid fa-chart-column bg-white/20 p-2 rounded-xl text-xs"></i></div>
-        <div><p id="btn-rep-month" class="text-base sm:text-lg font-extrabold">₹0</p><p class="text-[11px] text-rose-100 font-semibold">Monthly Stats →</p></div>
-      </button>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-rose-200 overflow-hidden">
-      <div class="px-4 py-3 border-b bg-rose-50 flex justify-between items-center">
-        <div>
-          <h3 class="font-extrabold text-sm text-rose-900 flex items-center gap-2"><i class="fa-solid fa-bell text-rose-600"></i> <span id="dash-pending-title">Pending Fees (0 Students)</span></h3>
-          <p class="text-[10px] text-rose-600">Red cards indicate students past their monthly due date</p>
-        </div>
-        <button type="button" onclick="openFeesTabFilter('pending')" class="text-xs font-bold bg-rose-600 text-white px-2.5 py-1 rounded-lg">See All</button>
-      </div>
-      <div id="dash-pending-list" class="divide-y max-h-64 overflow-y-auto"></div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div class="bg-white rounded-2xl p-4 shadow-sm border space-y-3">
-        <div class="flex justify-between items-center"><h3 class="font-extrabold text-sm">Monthly Comparison</h3><button type="button" onclick="switchTab('reports')" class="text-xs font-bold text-indigo-600">Full Report</button></div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-emerald-50 p-3 rounded-xl"><p class="text-[10px] font-bold text-emerald-700 uppercase">This Month Fees</p><p id="dash-this-month-fee" class="text-base font-extrabold text-emerald-800">₹0</p><p id="dash-last-month-fee" class="text-[10px] text-emerald-600">Last mo: ₹0</p></div>
-          <div class="bg-indigo-50 p-3 rounded-xl"><p class="text-[10px] font-bold text-indigo-700 uppercase">Active Students</p><p id="dash-this-month-stu" class="text-base font-extrabold text-indigo-800">0</p><p id="dash-last-month-stu" class="text-[10px] text-indigo-600">Last mo: 0</p></div>
-        </div>
-        <div><div class="flex justify-between text-xs font-bold mb-1"><span>Fee Recovery</span><span id="dash-recovery-pct" class="text-emerald-600">0%</span></div><div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="dash-recovery-bar" class="h-full bg-emerald-500 rounded-full" style="width:0%"></div></div></div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
-        <div class="px-4 py-3 border-b bg-purple-50/60 flex justify-between"><h3 class="font-extrabold text-sm">Recent Tests & Leaves</h3><button type="button" onclick="switchTab('tests')" class="text-xs font-bold text-purple-600">All Tests</button></div>
-        <div id="dash-tests-leaves" class="divide-y max-h-56 overflow-y-auto"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. FEES -->
-  <section id="sec-fees" class="hidden space-y-3.5">
-    <div class="flex justify-between items-center">
-      <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
-      <h2 class="font-extrabold text-sm">Fees Management</h2>
-      <button type="button" onclick="openFeeModal('')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Collect</button>
-    </div>
-
-    <div class="bg-white rounded-2xl p-3 border shadow-sm grid grid-cols-3 gap-2 text-center">
-      <div class="bg-slate-50 p-2 rounded-xl"><p class="text-[10px] font-bold text-slate-400 uppercase">Total Fees</p><p id="fee-tab-total" class="text-sm font-extrabold text-slate-800">₹0</p></div>
-      <div class="bg-emerald-50 p-2 rounded-xl"><p class="text-[10px] font-bold text-emerald-700 uppercase">Collected</p><p id="fee-tab-collected" class="text-sm font-extrabold text-emerald-600">₹0</p></div>
-      <div class="bg-rose-50 p-2 rounded-xl"><p class="text-[10px] font-bold text-rose-700 uppercase">Pending</p><p id="fee-tab-pending" class="text-sm font-extrabold text-rose-600">₹0</p></div>
-    </div>
-
-    <div class="grid grid-cols-3 gap-2">
-      <button type="button" onclick="setFeeSubTab('pending')" id="fsub-pending" class="g-rose text-white text-left p-3 rounded-2xl shadow-md ring-4 ring-rose-300">
-        <span class="text-[10px] font-extrabold uppercase text-rose-100 block">Unpaid</span>
-        <p id="fee-cnt-pending" class="text-sm sm:text-lg font-extrabold mt-0.5">0</p>
-        <p id="fee-amt-pending" class="text-[10px] text-rose-50 truncate">₹0 Due</p>
-      </button>
-      <button type="button" onclick="setFeeSubTab('paid')" id="fsub-paid" class="g-emerald text-white text-left p-3 rounded-2xl shadow-md opacity-75">
-        <span class="text-[10px] font-extrabold uppercase text-emerald-100 block">Paid</span>
-        <p id="fee-cnt-paid" class="text-sm sm:text-lg font-extrabold mt-0.5">0</p>
-        <p id="fee-amt-paid" class="text-[10px] text-emerald-50 truncate">₹0 Paid</p>
-      </button>
-      <button type="button" onclick="setFeeSubTab('ledger')" id="fsub-ledger" class="g-indigo text-white text-left p-3 rounded-2xl shadow-md opacity-75">
-        <span class="text-[10px] font-extrabold uppercase text-indigo-100 block">Receipts</span>
-        <p id="fee-cnt-ledger" class="text-sm sm:text-lg font-extrabold mt-0.5">0</p>
-        <p class="text-[10px] text-indigo-100 truncate">History</p>
-      </button>
-    </div>
-
-    <div class="bg-white p-3 rounded-2xl border space-y-2">
-      <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="fee-search" oninput="renderFeesTab()" placeholder="Search student..." class="border rounded-xl px-3 py-2 text-xs">
-        <select id="fee-batch-filter" onchange="renderFeesTab()" class="border rounded-xl px-2 py-2 text-xs font-bold bg-white"><option value="ALL">All Batches</option></select>
-      </div>
-      <div class="flex items-center gap-2 pt-1 border-t">
-        <select id="bill-batch-select" class="border rounded-xl px-2 py-1.5 text-xs font-bold bg-slate-50 flex-1"></select>
-        <button type="button" onclick="runMonthlyBilling()" class="bg-amber-400 text-amber-950 px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap">+ Bill Extra Month</button>
-      </div>
-    </div>
-
-    <div id="fee-subtab-content" class="space-y-2.5"></div>
-  </section>
-
-  <!-- 3. ATTENDANCE -->
-  <section id="sec-attendance" class="hidden space-y-3.5">
-    <div class="flex justify-between items-center">
-      <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
-      <h2 class="font-extrabold text-sm">Attendance & Leave</h2>
-      <div id="att-status-badge"></div>
-    </div>
-
-    <div class="bg-white p-3 rounded-2xl border space-y-2.5">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="block text-[10px] font-bold text-slate-400">DATE</label><input type="date" id="att-date" onchange="loadDateAttendance()" class="w-full border rounded-xl px-2.5 py-2 text-xs font-bold"></div>
-        <div><label class="block text-[10px] font-bold text-slate-400">BATCH</label><select id="att-batch-filter" onchange="renderAttendanceView()" class="w-full border rounded-xl px-2.5 py-2 text-xs font-bold bg-white"><option value="ALL">All Batches</option></select></div>
-      </div>
-      <div class="flex flex-wrap justify-end gap-1.5">
-        <button type="button" onclick="openLeaveModal()" class="px-3 py-2 rounded-xl bg-amber-100 text-amber-900 text-xs font-extrabold">Multi-Day Leave</button>
-        <button type="button" onclick="markAllAttendance('Present')" class="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold">All Present</button>
-        <button type="button" onclick="submitAttendance()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow">Save Attendance</button>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-4 gap-1.5 sm:gap-2.5">
-      <button type="button" onclick="setAttSubTab('mark')" id="asub-mark" class="g-indigo text-white p-2.5 rounded-2xl text-left shadow ring-4 ring-indigo-300">
-        <span class="text-[9px] font-bold uppercase block">Total</span>
-        <p id="att-cnt-total" class="text-sm sm:text-base font-extrabold">0</p>
-        <span class="text-[9px] opacity-90">Mark All</span>
-      </button>
-      <button type="button" onclick="setAttSubTab('Present')" id="asub-Present" class="g-emerald text-white p-2.5 rounded-2xl text-left shadow opacity-75">
-        <span class="text-[9px] font-bold uppercase block">Present</span>
-        <p id="att-cnt-Present" class="text-sm sm:text-base font-extrabold">0</p>
-        <span class="text-[9px] opacity-90">List →</span>
-      </button>
-      <button type="button" onclick="setAttSubTab('Absent')" id="asub-Absent" class="g-rose text-white p-2.5 rounded-2xl text-left shadow opacity-75">
-        <span class="text-[9px] font-bold uppercase block">Absent</span>
-        <p id="att-cnt-Absent" class="text-sm sm:text-base font-extrabold">0</p>
-        <span class="text-[9px] opacity-90">List →</span>
-      </button>
-      <button type="button" onclick="setAttSubTab('Leave')" id="asub-Leave" class="g-amber text-white p-2.5 rounded-2xl text-left shadow opacity-75">
-        <span class="text-[9px] font-bold uppercase block">Leave</span>
-        <p id="att-cnt-Leave" class="text-sm sm:text-base font-extrabold">0</p>
-        <span class="text-[9px] opacity-90">List →</span>
-      </button>
-    </div>
-
-    <div id="attendance-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5"></div>
-  </section>
-
-  <!-- 4. BATCHES -->
-  <section id="sec-batches" class="hidden space-y-3.5">
-    <div class="flex justify-between items-center">
-      <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
-      <h2 class="font-extrabold text-sm">Batch Management</h2>
-      <button type="button" onclick="openBatchModal(null)" class="bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Create Batch</button>
-    </div>
-    <div id="batches-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-  </section>
-
-  <!-- 5. STUDENTS -->
-  <section id="sec-students" class="hidden space-y-3">
-    <div class="flex justify-between items-center">
-      <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
-      <h2 class="font-extrabold text-sm">Students (Batch-Wise)</h2>
-      <button type="button" onclick="openAdmissionModal()" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">+ Add</button>
-    </div>
-    <div class="bg-white p-3 rounded-2xl border space-y-2">
-      <input type="text" id="stu-search" oninput="renderStudentsList()" placeholder="Search student, parent or phone..." class="w-full border rounded-xl px-3 py-2 text-xs">
-      <div class="grid grid-cols-2 gap-2">
-        <select id="stu-batch-filter" onchange="renderStudentsList()" class="border rounded-xl px-2 py-2 text-xs font-bold bg-white"></select>
-        <select id="stu-fee-filter" onchange="renderStudentsList()" class="border rounded-xl px-2 py-2 text-xs font-bold bg-white">
-          <option value="ALL">All Students</option>
-          <option value="OVERDUE">Overdue Only (Red)</option>
-          <option value="PENDING">All Pending</option>
-          <option value="PAID">Clear / Paid</option>
-        </select>
-      </div>
-    </div>
-    <div id="students-grid" class="space-y-4"></div>
-  </section>
-
-  <!-- 6. TESTS -->
-  <section id="sec-tests" class="hidden space-y-3.5">
-    <div class="flex justify-between items-center">
-      <button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button>
-      <h2 class="font-extrabold text-sm">Tests & Date-Wise Results</h2>
-      <button type="button" onclick="openNewTestModal()" class="bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ New Test</button>
-    </div>
-
-    <div class="bg-white p-3 rounded-2xl border grid grid-cols-3 gap-2">
-      <div><label class="block text-[9px] font-bold text-slate-400">FILTER DATE</label><input type="date" id="test-date-filter" onchange="renderTestsList()" class="w-full border rounded-xl px-2 py-1.5 text-xs font-bold"></div>
-      <div><label class="block text-[9px] font-bold text-slate-400">BATCH</label><select id="test-batch-filter" onchange="renderTestsList()" class="w-full border rounded-xl px-2 py-1.5 text-xs font-bold bg-white"><option value="ALL">All Batches</option></select></div>
-      <div class="flex items-end"><button type="button" onclick="document.getElementById('test-date-filter').value='';renderTestsList()" class="w-full bg-slate-100 text-slate-700 py-1.5 rounded-xl text-xs font-bold">All Dates</button></div>
-    </div>
-
-    <div id="tests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-  </section>
-
-  <!-- 7. REPORTS -->
-  <section id="sec-reports" class="hidden space-y-4">
-    <div class="flex justify-between items-center"><button type="button" onclick="switchTab('dashboard')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-xl">← Home</button><h2 class="font-extrabold text-sm">Monthly Reports</h2><span></span></div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-white p-4 rounded-2xl border space-y-3">
-        <div class="flex justify-between items-center"><h3 class="font-extrabold text-sm">Monthly Fees</h3><span id="rep-fee-badge" class="text-[11px] font-bold bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg"></span></div>
-        <div class="grid grid-cols-2 gap-2"><div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] font-bold text-slate-400">LAST MONTH</p><p id="rep-last-fee" class="text-lg font-extrabold">₹0</p></div><div class="bg-emerald-50 p-3 rounded-xl"><p class="text-[10px] font-bold text-emerald-700">THIS MONTH</p><p id="rep-this-fee" class="text-lg font-extrabold text-emerald-700">₹0</p></div></div>
-        <div id="rep-fee-bars" class="space-y-2"></div>
-      </div>
-      <div class="bg-white p-4 rounded-2xl border space-y-3">
-        <div class="flex justify-between items-center"><h3 class="font-extrabold text-sm">Monthly Students</h3><span id="rep-stu-badge" class="text-[11px] font-bold bg-indigo-50 text-indigo-700 px-2 py-1 rounded-lg"></span></div>
-        <div class="grid grid-cols-2 gap-2"><div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] font-bold text-slate-400">LAST MONTH</p><p id="rep-last-stu" class="text-lg font-extrabold">0</p></div><div class="bg-indigo-50 p-3 rounded-xl"><p class="text-[10px] font-bold text-indigo-700">THIS MONTH</p><p id="rep-this-stu" class="text-lg font-extrabold text-indigo-700">0</p></div></div>
-        <div id="rep-stu-bars" class="space-y-2"></div>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<nav class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t grid grid-cols-7 py-1.5 px-0.5 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
-  <button type="button" onclick="switchTab('dashboard')" id="mtab-dashboard" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-indigo-600 bg-indigo-50"><i class="fa-solid fa-house text-xs mb-0.5"></i><span>Home</span></button>
-  <button type="button" onclick="switchTab('fees')" id="mtab-fees" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-indian-rupee-sign text-xs mb-0.5"></i><span>Fees</span></button>
-  <button type="button" onclick="switchTab('attendance')" id="mtab-attendance" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-calendar-check text-xs mb-0.5"></i><span>Attend</span></button>
-  <button type="button" onclick="switchTab('batches')" id="mtab-batches" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-xs mb-0.5"></i><span>Batch</span></button>
-  <button type="button" onclick="switchTab('students')" id="mtab-students" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-users text-xs mb-0.5"></i><span>Student</span></button>
-  <button type="button" onclick="switchTab('tests')" id="mtab-tests" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-file-pen text-xs mb-0.5"></i><span>Tests</span></button>
-  <button type="button" onclick="switchTab('reports')" id="mtab-reports" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-slate-400"><i class="fa-solid fa-chart-column text-xs mb-0.5"></i><span>Report</span></button>
-</nav>
-
-<!-- MODALS -->
-<div id="modal-connect" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-10 justify-center p-3 overflow-y-auto">
+<!-- MODAL: ADD / EDIT BATCH -->
+<div id="modal-batch" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-4 py-3 hero-grad text-white flex justify-between items-center"><h3 class="font-bold text-sm">Connect Google Sheet</h3><button type="button" onclick="closeModal('modal-connect')"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="p-4 space-y-3">
-      <p class="text-xs text-slate-600">Paste your Google Apps Script Web App URL (ending with <b>/exec</b>):</p>
-      <input type="url" id="inp-gas-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full border rounded-xl px-3 py-2 text-xs">
-      <div class="flex gap-2"><button type="button" onclick="saveGasUrl()" class="flex-1 bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs">Connect Sheet</button><button type="button" onclick="useDemoMode()" class="px-4 bg-slate-100 font-bold py-2.5 rounded-xl text-xs">Demo Mode</button></div>
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
+      <h3 id="bat-modal-title" class="font-bold text-sm">Create Batch</h3>
+      <button type="button" onclick="closeModal('modal-batch')"><i class="fa-solid fa-xmark"></i></button>
     </div>
-  </div>
-</div>
-
-<div id="modal-batch" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-10 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-4 py-3 g-sky text-white flex justify-between items-center"><h3 id="bat-modal-title" class="font-bold text-sm">Create New Batch</h3><button type="button" onclick="closeModal('modal-batch')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="submitBatchForm(event)" class="p-4 space-y-3">
-      <input type="text" id="inp-bat-name" required placeholder="Batch Name * (e.g., Batch 1 - Class 10th)" class="w-full border rounded-xl px-3 py-2 text-sm">
-      <div class="grid grid-cols-2 gap-2"><input type="text" id="inp-bat-time" placeholder="Timing (e.g., 4 PM - 5 PM)" class="border rounded-xl px-3 py-2 text-sm"><input type="number" id="inp-bat-fee" required min="0" placeholder="Default Fee ₹ *" class="border rounded-xl px-3 py-2 text-sm font-bold"></div>
-      <input type="text" id="inp-bat-sub" placeholder="Subjects / Notes (Optional)" class="w-full border rounded-xl px-3 py-2 text-sm">
-      <button type="submit" id="bat-submit-btn" class="w-full bg-sky-600 text-white font-bold py-2.5 rounded-xl">Save Batch</button>
-    </form>
-  </div>
-</div>
-
-<div id="modal-add-student" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[88vh] overflow-y-auto">
-    <div class="px-4 py-3 hero-grad text-white flex justify-between items-center sticky top-0"><h3 class="font-bold text-sm">New Student Admission</h3><button type="button" onclick="closeModal('modal-add-student')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="submitNewStudent(event)" class="p-4 space-y-2.5">
-      <input type="text" id="inp-stu-name" required placeholder="Student Full Name *" class="w-full border rounded-xl px-3 py-2 text-sm">
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-[10px] font-bold text-slate-400">BATCH *</label><select id="inp-stu-batch-sel" onchange="onAdmissionBatchChange()" class="w-full border rounded-xl px-2 py-2 text-xs font-bold bg-white"></select></div>
-        <div><label class="text-[10px] font-bold text-slate-400">JOINED IN CLASS</label><input type="text" id="inp-stu-jclass" placeholder="e.g., Class 8th" class="w-full border rounded-xl px-3 py-2 text-sm"></div>
+    <form onsubmit="saveBatchForm(event)" class="p-4 space-y-3 text-xs">
+      <input type="hidden" id="f-bat-id"><input type="hidden" id="f-bat-oldname">
+      <div id="bat-overlap-warn" class="hidden bg-amber-50 border border-amber-300 text-amber-900 p-2.5 rounded-xl font-semibold"></div>
+      <div><label class="font-bold text-slate-500">Batch Name *</label><input type="text" id="f-bat-name" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Class *</label><input type="text" id="f-bat-class" required placeholder="Class 10th" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Subjects</label><input type="text" id="f-bat-subjects" placeholder="Math, Physics" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
       </div>
-      <input type="text" id="inp-stu-batch-custom" placeholder="Type New Batch Name *" class="hidden w-full border border-indigo-300 rounded-xl px-3 py-2 text-sm">
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-[10px] font-bold text-slate-400">JOINING DATE *</label><input type="date" id="inp-stu-jdate" required class="w-full border rounded-xl px-2 py-2 text-xs"></div><div><label class="text-[10px] font-bold text-slate-400">FATHER PHONE *</label><input type="tel" id="inp-stu-fphone" required placeholder="Mobile" class="w-full border rounded-xl px-3 py-2 text-sm"></div></div>
-      <div class="grid grid-cols-2 gap-2"><input type="text" id="inp-stu-fname" placeholder="Father Name" class="border rounded-xl px-3 py-2 text-sm"><input type="text" id="inp-stu-mname" placeholder="Mother Name" class="border rounded-xl px-3 py-2 text-sm"></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-[10px] font-bold text-slate-400">MONTHLY FEE ₹ *</label><input type="number" id="inp-stu-fee" required min="0" placeholder="1500" class="w-full border rounded-xl px-3 py-2 text-sm font-bold"></div><div><label class="text-[10px] font-bold text-slate-400">OPENING DUE (0 = Post-Paid)</label><input type="number" id="inp-stu-payable" min="0" value="0" class="w-full border rounded-xl px-3 py-2 text-sm font-bold"></div></div>
-      <div class="grid grid-cols-2 gap-2"><input type="tel" id="inp-stu-mphone" placeholder="Mother Phone" class="border rounded-xl px-3 py-2 text-sm"><input type="text" id="inp-stu-addr" placeholder="Address" class="border rounded-xl px-3 py-2 text-sm"></div>
-      <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl">Save Admission</button>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Start Time *</label><input type="time" id="f-bat-start" required onchange="checkBatchOverlap()" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">End Time *</label><input type="time" id="f-bat-end" required onchange="checkBatchOverlap()" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      </div>
+      <div>
+        <label class="font-bold text-slate-500">Teaching Days</label>
+        <div id="f-bat-days-wrap" class="flex flex-wrap gap-1.5 mt-1.5"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Max Capacity (Optional)</label><input type="number" id="f-bat-cap" min="0" placeholder="30" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Status</label><select id="f-bat-status" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white font-bold"><option>Active</option><option>Inactive</option></select></div>
+      </div>
+      <button type="submit" class="w-full navy-bg text-white font-bold py-3 rounded-xl shadow">Save Batch</button>
     </form>
   </div>
 </div>
 
-<div id="modal-collect-fee" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
+<!-- MODAL: BATCH STUDENTS -->
+<div id="modal-batch-students" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
+      <h3 id="mbs-title" class="font-bold text-sm">Batch Students</h3>
+      <button type="button" onclick="closeModal('modal-batch-students')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="mbs-body" class="p-4 overflow-y-auto space-y-3 text-xs"></div>
+  </div>
+</div>
+
+<!-- MODAL: RECORD FEE -->
+<div id="modal-fee" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-4 py-3 g-emerald text-white flex justify-between items-center"><h3 class="font-bold text-sm">Collect Tuition Fee</h3><button type="button" onclick="closeModal('modal-collect-fee')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="submitFee(event)" class="p-4 space-y-3">
-      <div><select id="inp-fee-student" required onchange="onFeeStudentSelect()" class="w-full border rounded-xl px-3 py-2 text-sm bg-white"></select><p id="fee-stu-balance-hint" class="text-xs text-rose-600 font-bold mt-1"></p></div>
-      <div class="grid grid-cols-2 gap-2"><input type="number" id="inp-fee-amount" required min="1" placeholder="Amount ₹" class="border rounded-xl px-3 py-2 text-sm font-bold"><select id="inp-fee-mode" class="border rounded-xl px-3 py-2 text-sm bg-white"><option>UPI / Online</option><option>Cash</option><option>Bank Transfer</option></select></div>
-      <div class="grid grid-cols-2 gap-2"><input type="text" id="inp-fee-month" required placeholder="Month" class="border rounded-xl px-3 py-2 text-sm"><input type="date" id="inp-fee-date" required class="border rounded-xl px-2 py-2 text-xs"></div>
-      <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl">Confirm & Generate Receipt</button>
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
+      <h3 class="font-bold text-sm"><i class="fa-solid fa-indian-rupee-sign text-amber-400 mr-1.5"></i>Record Fee Payment</h3>
+      <button type="button" onclick="closeModal('modal-fee')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form onsubmit="saveFeeForm(event)" class="p-4 space-y-3 text-xs">
+      <div><label class="font-bold text-slate-500">Student *</label><select id="f-fee-admno" required onchange="updateFeeHint()" class="w-full border rounded-xl px-3 py-2.5 mt-1 text-sm bg-white"></select></div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Fee Month *</label><input type="month" id="f-fee-month" required onchange="updateFeeHint()" class="w-full border rounded-xl px-2.5 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Payment Date *</label><input type="date" id="f-fee-date" required class="w-full border rounded-xl px-2.5 py-2 mt-1 text-sm"></div>
+      </div>
+      <div id="f-fee-hint" class="bg-amber-50 border border-amber-200 text-amber-900 p-2.5 rounded-xl font-semibold"></div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Amount Received (₹) *</label><input type="number" id="f-fee-amount" required min="1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
+        <div><label class="font-bold text-slate-500">Mode</label><select id="f-fee-mode" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white"><option>Cash</option><option>UPI</option><option>Bank Transfer</option></select></div>
+      </div>
+      <div><label class="font-bold text-slate-500">Notes</label><input type="text" id="f-fee-notes" placeholder="Optional note" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <button type="submit" class="w-full gold-bg text-[#0F172A] font-extrabold py-3 rounded-xl shadow">Save Payment</button>
     </form>
   </div>
 </div>
 
-<div id="modal-receipt" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-10 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-    <div class="px-4 py-3 g-emerald text-white flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-receipt mr-1.5"></i>Fee Payment Receipt</h3><button type="button" onclick="closeModal('modal-receipt')"><i class="fa-solid fa-xmark"></i></button></div>
-    <div id="receipt-body" class="p-4 space-y-3 text-xs"></div>
+<!-- MODAL: CREATE TEST -->
+<div id="modal-test" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
+      <h3 class="font-bold text-sm">Create Test & Enter Marks</h3>
+      <button type="button" onclick="closeModal('modal-test')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form onsubmit="saveTestForm(event)" class="p-4 space-y-3 text-xs overflow-y-auto">
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Test Name *</label><input type="text" id="f-test-name" required placeholder="Unit Test 1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-bold text-slate-500">Subject *</label><input type="text" id="f-test-subject" required placeholder="Mathematics" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <div><label class="font-bold text-slate-500">Batch *</label><select id="f-test-batch" onchange="renderTestMarksEntry()" class="w-full border rounded-xl px-2 py-2 mt-1 bg-white font-bold"></select></div>
+        <div><label class="font-bold text-slate-500">Class</label><input type="text" id="f-test-class" placeholder="Class 10th" class="w-full border rounded-xl px-2.5 py-2 mt-1"></div>
+        <div><label class="font-bold text-slate-500">Test Date *</label><input type="date" id="f-test-date" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div><label class="font-bold text-slate-500">Max Marks *</label><input type="number" id="f-test-max" required value="100" min="1" class="w-full border rounded-xl px-3 py-2 mt-1 font-bold"></div>
+        <div><label class="font-bold text-slate-500">Passing Marks *</label><input type="number" id="f-test-pass" required value="35" min="0" class="w-full border rounded-xl px-3 py-2 mt-1 font-bold"></div>
+      </div>
+      <div id="f-test-marks-wrap" class="border rounded-xl divide-y max-h-52 overflow-y-auto p-1.5"></div>
+      <button type="submit" class="w-full navy-bg text-white font-bold py-3 rounded-xl shadow">Save Test & Marks</button>
+    </form>
   </div>
 </div>
 
-<div id="modal-leave" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
+<!-- MODAL: TEST DETAIL -->
+<div id="modal-test-detail" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[88vh] flex flex-col overflow-hidden">
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
+      <div><h3 id="td-title" class="font-bold text-sm">Test Scorecard</h3><p id="td-meta" class="text-[11px] text-slate-300"></p></div>
+      <button type="button" onclick="closeModal('modal-test-detail')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="td-body" class="p-4 overflow-y-auto space-y-2"></div>
+    <div class="p-3 bg-slate-50 border-t flex justify-end"><button type="button" id="td-del-btn" class="text-xs font-bold text-rose-600 px-3 py-1">Delete Test</button></div>
+  </div>
+</div>
+
+<!-- MODAL: SETTINGS -->
+<div id="modal-settings" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-4 py-3 g-amber text-white flex justify-between items-center"><h3 class="font-bold text-sm">Multi-Day Leave</h3><button type="button" onclick="closeModal('modal-leave')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="submitLeaveRange(event)" class="p-4 space-y-3">
-      <select id="inp-leave-student" required class="w-full border rounded-xl px-3 py-2 text-sm bg-white"></select>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-[10px] font-bold text-slate-400">FROM</label><input type="date" id="inp-leave-from" required class="w-full border rounded-xl px-2 py-2 text-xs"></div><div><label class="text-[10px] font-bold text-slate-400">TO</label><input type="date" id="inp-leave-to" required class="w-full border rounded-xl px-2 py-2 text-xs"></div></div>
-      <input type="text" id="inp-leave-remark" value="Out of Station / Family Travel" class="w-full border rounded-xl px-3 py-2 text-sm">
-      <button type="submit" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-xl">Save Leave</button>
-    </form>
-  </div>
-</div>
-
-<div id="modal-new-test" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden">
-    <div class="px-4 py-3 bg-purple-600 text-white flex justify-between items-center"><h3 class="font-bold text-sm">New Test & Marks</h3><button type="button" onclick="closeModal('modal-new-test')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="submitTestMarks(event)" class="p-4 space-y-3 overflow-y-auto">
-      <div class="grid grid-cols-2 gap-2"><input type="text" id="inp-test-name" required placeholder="Test Name *" class="border rounded-xl px-3 py-2 text-sm"><input type="text" id="inp-test-sub" required placeholder="Subject *" class="border rounded-xl px-3 py-2 text-sm"></div>
-      <div class="grid grid-cols-3 gap-2"><select id="inp-test-batch" onchange="renderTestMarksInputs()" class="border rounded-xl px-2 py-2 text-xs font-bold bg-white"></select><input type="number" id="inp-test-max" required value="50" min="1" class="border rounded-xl px-2 py-2 text-xs font-bold"><input type="date" id="inp-test-date" required class="border rounded-xl px-2 py-2 text-xs"></div>
-      <div id="test-marks-inputs" class="border rounded-xl divide-y max-h-48 overflow-y-auto p-1.5"></div>
-      <button type="submit" class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-xl">Save Test Results</button>
-    </form>
-  </div>
-</div>
-
-<div id="modal-test-view" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[88vh] flex flex-col overflow-hidden">
-    <div class="px-4 py-3 bg-slate-900 text-white flex justify-between items-center">
-      <div><h3 id="vt-title" class="font-bold text-sm">Scorecard</h3><p id="vt-meta" class="text-[11px] text-slate-300"></p></div>
-      <button type="button" onclick="closeModal('modal-test-view')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center"><h3 class="font-bold text-sm">Security & Database Settings</h3><button type="button" onclick="closeModal('modal-settings')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="p-4 space-y-4 text-xs">
+      <div><label class="font-bold text-slate-500">Google Apps Script URL</label><input type="url" id="set-gas-url" class="w-full border rounded-xl px-3 py-2 mt-1"><button type="button" onclick="updateGasUrlSetting()" class="mt-2 bg-slate-800 text-white px-3 py-1.5 rounded-lg font-bold">Update URL</button></div>
+      <form onsubmit="saveCredentialsForm(event)" class="border-t pt-3 space-y-2.5">
+        <h4 class="font-bold text-slate-700">Change Admin Login</h4>
+        <input type="password" id="set-cur-pass" required placeholder="Current Password *" class="w-full border rounded-xl px-3 py-2">
+        <input type="text" id="set-new-user" placeholder="New Username (optional)" class="w-full border rounded-xl px-3 py-2">
+        <input type="password" id="set-new-pass" placeholder="New Password (min 4 chars)" class="w-full border rounded-xl px-3 py-2">
+        <button type="submit" class="w-full navy-bg text-white font-bold py-2.5 rounded-xl">Update Login</button>
+      </form>
+      <div class="border-t pt-3 flex gap-2">
+        <button type="button" onclick="exportFullBackupExcel()" class="flex-1 bg-emerald-600 text-white font-bold py-2 rounded-xl"><i class="fa-solid fa-file-excel mr-1"></i> Backup Excel</button>
+        <button type="button" onclick="logout()" class="px-4 bg-rose-50 text-rose-600 font-bold py-2 rounded-xl">Logout</button>
+      </div>
     </div>
-    <div class="grid grid-cols-3 gap-1.5 p-2.5 bg-slate-100">
-      <button type="button" onclick="setTestViewTab('all')" id="vtab-all" class="bg-indigo-600 text-white py-2 rounded-xl text-[11px] font-extrabold">All Ranks</button>
-      <button type="button" onclick="setTestViewTab('pass')" id="vtab-pass" class="bg-white text-emerald-700 py-2 rounded-xl text-[11px] font-extrabold">Passed</button>
-      <button type="button" onclick="setTestViewTab('fail')" id="vtab-fail" class="bg-white text-rose-600 py-2 rounded-xl text-[11px] font-extrabold">Low Score</button>
-    </div>
-    <div id="vt-body" class="p-3.5 overflow-y-auto divide-y"></div>
-    <div class="p-3 bg-slate-50 border-t text-right"><button type="button" id="vt-del-btn" class="text-xs font-bold text-rose-600">Delete Test</button></div>
-  </div>
-</div>
-
-<div id="modal-stu-detail" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden">
-    <div class="px-4 py-3 hero-grad text-white flex justify-between items-center">
-      <div class="flex items-center gap-2.5"><div id="det-avatar" class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-extrabold">AS</div><div><h3 id="det-name" class="font-extrabold text-sm">Name</h3><p id="det-meta" class="text-[11px] text-indigo-100"></p></div></div>
-      <button type="button" onclick="closeModal('modal-stu-detail')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="flex border-b bg-slate-50 text-xs font-bold">
-      <button type="button" onclick="setDetTab('profile')" id="dmod-profile" class="flex-1 py-2.5 bg-white text-indigo-600 border-b-2 border-indigo-600">Profile</button>
-      <button type="button" onclick="setDetTab('fees')" id="dmod-fees" class="flex-1 py-2.5 text-slate-500">Fees</button>
-      <button type="button" onclick="setDetTab('tests')" id="dmod-tests" class="flex-1 py-2.5 text-slate-500">Tests</button>
-    </div>
-    <div id="det-content" class="p-4 overflow-y-auto space-y-3"></div>
   </div>
 </div>
 
 <script src="app.js"></script>
+<script src="views.js"></script>
 </body>
 </html>
