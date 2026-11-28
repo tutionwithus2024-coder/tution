@@ -3,331 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AK Learning Hub — Tuition Management</title>
+<title>AK Learning Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <style>
-  html,body{font-family:'Inter',sans-serif;background:#FAF9F6;color:#0F172A;max-width:100%;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-  h1,h2,h3,h4,.font-heading{font-family:'Poppins',sans-serif}
+  html,body{font-family:system-ui,-apple-system,sans-serif;background:#f5f7ff;color:#1e293b;max-width:100%;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
   .hidden{display:none!important}
-  .navy-bg{background:#0F172A}
-  .navy-card{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%)}
-  .gold-text{color:#D4AF37}
-  .gold-bg{background:linear-gradient(135deg,#D4AF37 0%,#F59E0B 100%)}
-  .snav-active{background:rgba(212,175,55,0.16);color:#FDE68A;border-left:3px solid #D4AF37;font-weight:700}
-  .modal-bg{background:rgba(15,23,42,0.7);backdrop-filter:blur(4px)}
-  .card-soft{background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 2px 10px rgba(15,23,42,0.04)}
-  ::-webkit-scrollbar{width:5px;height:5px}
-  ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:4px}
+  .top-grad{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 60%,#9333ea 100%)}
+  .c-blue{background:linear-gradient(135deg,#2563eb,#4f46e5)}
+  .c-green{background:linear-gradient(135deg,#059669,#10b981)}
+  .c-rose{background:linear-gradient(135deg,#e11d48,#f97316)}
+  .c-teal{background:linear-gradient(135deg,#0d9488,#06b6d4)}
+  .c-purple{background:linear-gradient(135deg,#7c3aed,#c026d3)}
+  .c-amber{background:linear-gradient(135deg,#d97706,#f59e0b)}
+  .card{background:#fff;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(79,70,229,.06)}
+  .mbg{background:rgba(15,23,42,.55);backdrop-filter:blur(3px)}
+  .tab-on{color:#6d28d9;border-bottom:3px solid #6d28d9;font-weight:700}
 </style>
 </head>
-<body class="antialiased">
+<body class="pb-20 md:pb-8">
 
-<!-- LOADER -->
-<div id="loader" class="fixed inset-0 z-[70] hidden flex-col items-center justify-center bg-white/85 backdrop-blur-sm">
-  <div class="w-11 h-11 border-4 border-slate-200 border-t-[#0F172A] rounded-full animate-spin"></div>
-  <p class="mt-3 text-xs font-bold text-slate-700">Syncing AK Learning Hub...</p>
+<div id="loader" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-white/85">
+  <div class="w-9 h-9 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin"></div>
+  <p class="mt-2 text-xs font-bold text-violet-700">Syncing...</p>
 </div>
 
-<!-- TOAST -->
-<div id="toast" class="fixed top-4 right-4 left-4 sm:left-auto z-[80] hidden">
-  <div class="flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl bg-[#0F172A] text-white text-xs sm:text-sm font-medium border border-amber-400/30">
-    <i id="toast-icon" class="fa-solid fa-circle-check text-amber-400"></i>
-    <span id="toast-msg">Done</span>
+<div id="toast" class="fixed top-3 left-3 right-3 sm:left-auto sm:right-4 z-50 hidden">
+  <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg bg-slate-900 text-white text-xs font-medium">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg">Done</span>
   </div>
 </div>
 
-<!-- SECURE LOGIN SCREEN -->
-<div id="auth-screen" class="min-h-screen navy-bg flex items-center justify-center p-4">
-  <div class="bg-[#FAF9F6] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-amber-400/30">
-    <div class="navy-card p-6 text-center text-white border-b border-amber-400/20">
-      <div class="w-14 h-14 mx-auto rounded-2xl gold-bg text-[#0F172A] flex items-center justify-center shadow-lg mb-3">
-        <i class="fa-solid fa-graduation-cap text-2xl"></i>
-      </div>
-      <h1 class="text-xl font-extrabold tracking-tight">AK Learning Hub</h1>
-      <p class="text-xs text-slate-300 mt-1">Tuition Management Portal • Secure Admin Login</p>
+<header class="top-grad text-white sticky top-0 z-30 shadow-md">
+  <div class="max-w-5xl mx-auto px-3.5 py-3 flex items-center justify-between gap-2">
+    <div onclick="navTo('dashboard')" class="flex items-center gap-2.5 cursor-pointer min-w-0">
+      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0"><i class="fa-solid fa-graduation-cap text-amber-300"></i></div>
+      <div class="min-w-0"><h1 class="text-sm sm:text-base font-extrabold truncate">AK Learning Hub</h1><p class="text-[10px] text-violet-100">Tuition Management</p></div>
     </div>
-    <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
-      <div id="login-url-wrap">
-        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Google Script Web App URL *</label>
-        <input type="url" id="login-url" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full border border-slate-300 bg-white rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-amber-500">
-      </div>
-      <div>
-        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Username</label>
-        <input type="text" id="login-user" required value="admin" class="w-full border border-slate-300 bg-white rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#0F172A]">
-      </div>
-      <div>
-        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Password</label>
-        <input type="password" id="login-pass" required placeholder="Enter password (default: ak1234)" class="w-full border border-slate-300 bg-white rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#0F172A]">
-      </div>
-      <p id="login-err" class="hidden text-xs font-bold text-rose-600 bg-rose-50 p-2.5 rounded-xl"></p>
-      <button type="submit" class="w-full navy-bg hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-lock text-amber-400"></i> Sign In to Dashboard
-      </button>
-    </form>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button type="button" onclick="openStudentModal(null)" class="bg-white text-violet-700 px-2.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm">+ Student</button>
+      <button type="button" onclick="openFeeModal('')" class="bg-emerald-400 text-emerald-950 px-2.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm">₹ Fee</button>
+      <button type="button" onclick="openConnectModal()" class="bg-white/20 p-2 rounded-xl text-xs" title="Sheet Link"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </div>
+  <div class="hidden md:block bg-white text-slate-600 border-b">
+    <div class="max-w-5xl mx-auto px-4 flex gap-6 text-sm font-semibold">
+      <button type="button" onclick="navTo('dashboard')" id="dtab-dashboard" class="py-2.5 tab-on">Dashboard</button>
+      <button type="button" onclick="navTo('fees')" id="dtab-fees" class="py-2.5">Fees</button>
+      <button type="button" onclick="navTo('attendance')" id="dtab-attendance" class="py-2.5">Attendance</button>
+      <button type="button" onclick="navTo('batches')" id="dtab-batches" class="py-2.5">Batches</button>
+      <button type="button" onclick="navTo('tests')" id="dtab-tests" class="py-2.5">Tests</button>
+      <button type="button" onclick="navTo('reports')" id="dtab-reports" class="py-2.5">Reports</button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-3 py-4 space-y-4">
+  <section id="sec-dashboard" class="space-y-4"></section>
+  <section id="sec-fees" class="hidden space-y-3.5"></section>
+  <section id="sec-attendance" class="hidden space-y-3.5"></section>
+  <section id="sec-batches" class="hidden space-y-3.5"></section>
+  <section id="sec-tests" class="hidden space-y-3.5"></section>
+  <section id="sec-reports" class="hidden space-y-3.5"></section>
+</main>
+
+<nav class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t grid grid-cols-6 py-1.5 px-1 z-30 shadow-[0_-4px_12px_rgba(79,70,229,0.08)]">
+  <button type="button" onclick="navTo('dashboard')" id="mtab-dashboard" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-bold text-violet-700 bg-violet-50"><i class="fa-solid fa-house text-xs mb-0.5"></i><span>Home</span></button>
+  <button type="button" onclick="navTo('fees')" id="mtab-fees" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400"><i class="fa-solid fa-indian-rupee-sign text-xs mb-0.5"></i><span>Fees</span></button>
+  <button type="button" onclick="navTo('attendance')" id="mtab-attendance" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400"><i class="fa-solid fa-calendar-check text-xs mb-0.5"></i><span>Attend</span></button>
+  <button type="button" onclick="navTo('batches')" id="mtab-batches" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400"><i class="fa-solid fa-layer-group text-xs mb-0.5"></i><span>Batches</span></button>
+  <button type="button" onclick="navTo('tests')" id="mtab-tests" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400"><i class="fa-solid fa-file-pen text-xs mb-0.5"></i><span>Tests</span></button>
+  <button type="button" onclick="navTo('reports')" id="mtab-reports" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400"><i class="fa-solid fa-chart-simple text-xs mb-0.5"></i><span>Reports</span></button>
+</nav>
+
+<!-- CONNECT MODAL -->
+<div id="modal-connect" class="fixed inset-0 z-50 hidden mbg flex items-start pt-12 justify-center p-3">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
+    <div class="px-4 py-3 top-grad text-white flex justify-between items-center"><h3 class="font-bold text-sm">Connect Google Sheet</h3><button type="button" onclick="closeM('modal-connect')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="p-4 space-y-3 text-xs">
+      <p class="text-slate-500">Paste your Google Apps Script Web App URL (<b>/exec</b>):</p>
+      <input type="url" id="inp-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full border rounded-xl px-3 py-2">
+      <button type="button" onclick="saveUrlConnect()" class="w-full top-grad text-white font-bold py-2.5 rounded-xl">Connect & Save</button>
+    </div>
   </div>
 </div>
 
-<!-- MAIN APP SHELL -->
-<div id="app-shell" class="hidden min-h-screen flex flex-col md:flex-row">
-
-  <!-- DESKTOP SIDEBAR -->
-  <aside class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 navy-bg text-slate-300 z-30 border-r border-slate-800">
-    <div class="p-5 flex items-center gap-3 border-b border-slate-800">
-      <div class="w-10 h-10 rounded-xl gold-bg text-[#0F172A] flex items-center justify-center shrink-0 shadow">
-        <i class="fa-solid fa-graduation-cap text-lg"></i>
-      </div>
-      <div class="min-w-0">
-        <h2 class="text-white font-extrabold text-sm tracking-tight truncate">AK Learning Hub</h2>
-        <p class="text-[10px] text-amber-400 font-semibold">Commercial Tuition Suite</p>
-      </div>
-    </div>
-    <nav class="flex-1 p-3 space-y-1 text-sm font-medium overflow-y-auto">
-      <button type="button" onclick="navTo('dashboard')" id="snav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition snav-active"><i class="fa-solid fa-chart-pie w-4"></i> Dashboard</button>
-      <button type="button" onclick="navTo('students')" id="snav-students" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-user-graduate w-4"></i> Students</button>
-      <button type="button" onclick="navTo('batches')" id="snav-batches" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-layer-group w-4"></i> Batches</button>
-      <button type="button" onclick="navTo('fees')" id="snav-fees" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-indian-rupee-sign w-4"></i> Fees</button>
-      <button type="button" onclick="navTo('attendance')" id="snav-attendance" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-calendar-check w-4"></i> Attendance</button>
-      <button type="button" onclick="navTo('tests')" id="snav-tests" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-file-pen w-4"></i> Tests & Results</button>
-      <button type="button" onclick="navTo('reports')" id="snav-reports" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-chart-column w-4"></i> Reports & Analytics</button>
-    </nav>
-    <div class="p-3 border-t border-slate-800 space-y-1 text-xs">
-      <button type="button" onclick="openSettingsModal()" class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl hover:bg-slate-800 text-slate-300"><i class="fa-solid fa-gear text-amber-400"></i> Security & Sheet</button>
-      <button type="button" onclick="logout()" class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl hover:bg-rose-950/50 text-rose-400"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-    </div>
-  </aside>
-
-  <!-- CONTENT AREA -->
-  <div class="flex-1 md:pl-64 flex flex-col min-w-0 pb-20 md:pb-8">
-    <!-- TOP BAR -->
-    <header class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-20 px-4 py-3 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="md:hidden w-9 h-9 rounded-xl navy-bg text-amber-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-graduation-cap"></i></div>
-        <div class="min-w-0">
-          <h1 id="page-title" class="text-sm sm:text-lg font-extrabold text-[#0F172A] truncate">Dashboard</h1>
-          <p id="page-sub" class="text-[10px] sm:text-xs text-slate-500 truncate">AK Learning Hub Overview</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-2 shrink-0">
-        <button type="button" onclick="openStudentModal(null)" class="navy-bg hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
-          <i class="fa-solid fa-user-plus text-amber-400"></i> <span class="hidden sm:inline">Add Student</span>
-        </button>
-        <button type="button" onclick="openFeeModal('')" class="gold-bg hover:opacity-95 text-[#0F172A] px-3 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1 shadow-sm">
-          <i class="fa-solid fa-indian-rupee-sign"></i> <span>Pay Fee</span>
-        </button>
-        <button type="button" onclick="openSettingsModal()" class="md:hidden p-2 rounded-xl bg-slate-100 text-slate-700 text-xs"><i class="fa-solid fa-gear"></i></button>
-      </div>
-    </header>
-
-    <main class="p-3.5 sm:p-6 max-w-7xl w-full mx-auto space-y-5">
-      <section id="sec-dashboard" class="space-y-5"></section>
-      <section id="sec-students" class="hidden space-y-4"></section>
-      <section id="sec-batches" class="hidden space-y-4"></section>
-      <section id="sec-fees" class="hidden space-y-4"></section>
-      <section id="sec-attendance" class="hidden space-y-4"></section>
-      <section id="sec-tests" class="hidden space-y-4"></section>
-      <section id="sec-reports" class="hidden space-y-4"></section>
-    </main>
-  </div>
-
-  <!-- MOBILE BOTTOM NAV (7 TABS) -->
-  <nav class="md:hidden fixed bottom-0 inset-x-0 bg-[#0F172A] text-slate-400 border-t border-slate-800 grid grid-cols-7 py-1.5 px-0.5 z-30">
-    <button type="button" onclick="navTo('dashboard')" id="mnav-dashboard" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold text-amber-400"><i class="fa-solid fa-chart-pie text-xs mb-0.5"></i><span>Home</span></button>
-    <button type="button" onclick="navTo('students')" id="mnav-students" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-user-graduate text-xs mb-0.5"></i><span>Students</span></button>
-    <button type="button" onclick="navTo('batches')" id="mnav-batches" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-layer-group text-xs mb-0.5"></i><span>Batches</span></button>
-    <button type="button" onclick="navTo('fees')" id="mnav-fees" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-indian-rupee-sign text-xs mb-0.5"></i><span>Fees</span></button>
-    <button type="button" onclick="navTo('attendance')" id="mnav-attendance" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-calendar-check text-xs mb-0.5"></i><span>Attend</span></button>
-    <button type="button" onclick="navTo('tests')" id="mnav-tests" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-file-pen text-xs mb-0.5"></i><span>Tests</span></button>
-    <button type="button" onclick="navTo('reports')" id="mnav-reports" class="flex flex-col items-center py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-chart-column text-xs mb-0.5"></i><span>Reports</span></button>
-  </nav>
-</div>
-
-<!-- MODAL: ADD / EDIT STUDENT -->
-<div id="modal-student" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[88vh] overflow-y-auto">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center sticky top-0 z-10">
-      <h3 id="stu-modal-title" class="font-bold text-sm">Add Student</h3>
-      <button type="button" onclick="closeModal('modal-student')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <form onsubmit="saveStudentForm(event)" class="p-4 space-y-3 text-xs">
+<!-- STUDENT MODAL -->
+<div id="modal-student" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3 overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[88vh] overflow-y-auto">
+    <div class="px-4 py-3 top-grad text-white flex justify-between items-center sticky top-0"><h3 id="stu-m-title" class="font-bold text-sm">Add Student</h3><button type="button" onclick="closeM('modal-student')"><i class="fa-solid fa-xmark"></i></button></div>
+    <form onsubmit="saveStudentForm(event)" class="p-4 space-y-2.5 text-xs">
       <input type="hidden" id="f-stu-admno">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Full Name *</label><input type="text" id="f-stu-name" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Class *</label><input type="text" id="f-stu-class" required placeholder="e.g., Class 10th" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <div><label class="font-semibold text-slate-500">Student Name *</label><input type="text" id="f-stu-name" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Class *</label><input type="text" id="f-stu-class" required placeholder="10th" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-semibold text-slate-500">Monthly Fee (₹) *</label><input type="number" id="f-stu-fee" required min="0" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
       </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Father's Name</label><input type="text" id="f-stu-father" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Mother's Name</label><input type="text" id="f-stu-mother" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Father Name</label><input type="text" id="f-stu-father" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-semibold text-slate-500">Parent Phone *</label><input type="tel" id="f-stu-pphone" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
       </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Student Mobile</label><input type="tel" id="f-stu-sphone" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Parent Mobile *</label><input type="tel" id="f-stu-pphone" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <div><label class="font-semibold text-slate-500">Assign Batches</label><div id="f-stu-batches" class="flex flex-wrap gap-1.5 mt-1 p-2 bg-violet-50/60 rounded-xl border border-violet-100"></div></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Joining Date *</label><input type="date" id="f-stu-jdate" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
+        <div><label class="font-semibold text-slate-500">Status</label><select id="f-stu-status" class="w-full border rounded-xl px-2 py-2 mt-1 bg-white font-semibold"><option>Active</option><option>Left</option></select></div>
       </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Subjects</label><input type="text" id="f-stu-subjects" placeholder="Math, Science" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Monthly Fee (₹) *</label><input type="number" id="f-stu-fee" required min="0" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Leaving Date</label><input type="date" id="f-stu-ldate" class="w-full border rounded-xl px-2 py-2 mt-1"></div>
+        <div><label class="font-semibold text-slate-500">Address</label><input type="text" id="f-stu-addr" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
       </div>
-      <div>
-        <label class="font-bold text-slate-500">Assign Batches (Multiple Allowed)</label>
-        <div id="f-stu-batches-wrap" class="flex flex-wrap gap-1.5 mt-1.5 p-2.5 bg-slate-50 rounded-xl border"></div>
+      <div class="flex gap-2 pt-1">
+        <button type="submit" class="flex-1 top-grad text-white font-bold py-2.5 rounded-xl">Save</button>
+        <button type="button" id="f-stu-del" class="hidden px-4 bg-rose-50 text-rose-600 font-bold py-2.5 rounded-xl">Delete</button>
       </div>
-      <div class="grid grid-cols-3 gap-2">
-        <div><label class="font-bold text-slate-500">Joining Date *</label><input type="date" id="f-stu-jdate" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
-        <div><label class="font-bold text-slate-500">Status</label><select id="f-stu-status" class="w-full border rounded-xl px-2 py-2 mt-1 bg-white font-bold"><option>Active</option><option>Inactive</option><option>Left</option></select></div>
-        <div><label class="font-bold text-slate-500">Leaving Date</label><input type="date" id="f-stu-ldate" class="w-full border rounded-xl px-2 py-2 mt-1"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Address</label><input type="text" id="f-stu-address" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Photo URL (Optional)</label><input type="url" id="f-stu-photo" placeholder="https://..." class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-      </div>
-      <div><label class="font-bold text-slate-500">Notes</label><input type="text" id="f-stu-notes" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-      <button type="submit" class="w-full navy-bg text-white font-bold py-3 rounded-xl shadow">Save Student</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL: STUDENT PROFILE -->
-<div id="modal-student-profile" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-5 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
-    <div id="prof-header" class="px-5 py-4 navy-bg text-white flex justify-between items-center"></div>
-    <div id="prof-tabs" class="flex border-b bg-slate-50 text-xs font-bold overflow-x-auto"></div>
-    <div id="prof-body" class="p-4 sm:p-5 overflow-y-auto space-y-4"></div>
-  </div>
-</div>
-
-<!-- MODAL: ADD / EDIT BATCH -->
-<div id="modal-batch" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
-      <h3 id="bat-modal-title" class="font-bold text-sm">Create Batch</h3>
-      <button type="button" onclick="closeModal('modal-batch')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
+<!-- BATCH MODAL -->
+<div id="modal-batch" class="fixed inset-0 z-50 hidden mbg flex items-start pt-10 justify-center p-3">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
+    <div class="px-4 py-3 c-teal text-white flex justify-between items-center"><h3 id="bat-m-title" class="font-bold text-sm">Create Batch</h3><button type="button" onclick="closeM('modal-batch')"><i class="fa-solid fa-xmark"></i></button></div>
     <form onsubmit="saveBatchForm(event)" class="p-4 space-y-3 text-xs">
-      <input type="hidden" id="f-bat-id"><input type="hidden" id="f-bat-oldname">
-      <div id="bat-overlap-warn" class="hidden bg-amber-50 border border-amber-300 text-amber-900 p-2.5 rounded-xl font-semibold"></div>
-      <div><label class="font-bold text-slate-500">Batch Name *</label><input type="text" id="f-bat-name" required class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Class *</label><input type="text" id="f-bat-class" required placeholder="Class 10th" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Subjects</label><input type="text" id="f-bat-subjects" placeholder="Math, Physics" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <input type="hidden" id="f-bat-id"><input type="hidden" id="f-bat-old">
+      <div><label class="font-semibold text-slate-500">Batch Name *</label><input type="text" id="f-bat-name" required placeholder="e.g., Batch 1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Class</label><input type="text" id="f-bat-class" placeholder="10th" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
+        <div><label class="font-semibold text-slate-500">Timing</label><input type="text" id="f-bat-time" placeholder="4 PM - 5 PM" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
       </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Start Time *</label><input type="time" id="f-bat-start" required onchange="checkBatchOverlap()" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">End Time *</label><input type="time" id="f-bat-end" required onchange="checkBatchOverlap()" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-      </div>
-      <div>
-        <label class="font-bold text-slate-500">Teaching Days</label>
-        <div id="f-bat-days-wrap" class="flex flex-wrap gap-1.5 mt-1.5"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Max Capacity (Optional)</label><input type="number" id="f-bat-cap" min="0" placeholder="30" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Status</label><select id="f-bat-status" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white font-bold"><option>Active</option><option>Inactive</option></select></div>
-      </div>
-      <button type="submit" class="w-full navy-bg text-white font-bold py-3 rounded-xl shadow">Save Batch</button>
+      <button type="submit" class="w-full c-teal text-white font-bold py-2.5 rounded-xl">Save Batch</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL: BATCH STUDENTS -->
-<div id="modal-batch-students" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
-      <h3 id="mbs-title" class="font-bold text-sm">Batch Students</h3>
-      <button type="button" onclick="closeModal('modal-batch-students')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
+<!-- BATCH STUDENTS MODAL -->
+<div id="modal-batch-stus" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden">
+    <div class="px-4 py-3 c-blue text-white flex justify-between items-center"><h3 id="mbs-title" class="font-bold text-sm">Batch Students</h3><button type="button" onclick="closeM('modal-batch-stus')"><i class="fa-solid fa-xmark"></i></button></div>
     <div id="mbs-body" class="p-4 overflow-y-auto space-y-3 text-xs"></div>
   </div>
 </div>
 
-<!-- MODAL: RECORD FEE -->
-<div id="modal-fee" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
-      <h3 class="font-bold text-sm"><i class="fa-solid fa-indian-rupee-sign text-amber-400 mr-1.5"></i>Record Fee Payment</h3>
-      <button type="button" onclick="closeModal('modal-fee')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
+<!-- FEE MODAL -->
+<div id="modal-fee" class="fixed inset-0 z-50 hidden mbg flex items-start pt-10 justify-center p-3">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
+    <div class="px-4 py-3 c-green text-white flex justify-between items-center"><h3 class="font-bold text-sm">Collect Fee</h3><button type="button" onclick="closeM('modal-fee')"><i class="fa-solid fa-xmark"></i></button></div>
     <form onsubmit="saveFeeForm(event)" class="p-4 space-y-3 text-xs">
-      <div><label class="font-bold text-slate-500">Student *</label><select id="f-fee-admno" required onchange="updateFeeHint()" class="w-full border rounded-xl px-3 py-2.5 mt-1 text-sm bg-white"></select></div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Fee Month *</label><input type="month" id="f-fee-month" required onchange="updateFeeHint()" class="w-full border rounded-xl px-2.5 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Payment Date *</label><input type="date" id="f-fee-date" required class="w-full border rounded-xl px-2.5 py-2 mt-1 text-sm"></div>
+      <div><label class="font-semibold text-slate-500">Student *</label><select id="f-fee-admno" required onchange="updateFeeHint()" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white"></select></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Month *</label><input type="month" id="f-fee-month" required onchange="updateFeeHint()" class="w-full border rounded-xl px-2 py-2 mt-1"></div>
+        <div><label class="font-semibold text-slate-500">Date *</label><input type="date" id="f-fee-date" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
       </div>
-      <div id="f-fee-hint" class="bg-amber-50 border border-amber-200 text-amber-900 p-2.5 rounded-xl font-semibold"></div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Amount Received (₹) *</label><input type="number" id="f-fee-amount" required min="1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
-        <div><label class="font-bold text-slate-500">Mode</label><select id="f-fee-mode" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white"><option>Cash</option><option>UPI</option><option>Bank Transfer</option></select></div>
+      <div id="f-fee-hint" class="bg-emerald-50 border border-emerald-200 p-2 rounded-xl font-semibold text-emerald-900"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="font-semibold text-slate-500">Amount (₹) *</label><input type="number" id="f-fee-amount" required min="1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
+        <div><label class="font-semibold text-slate-500">Mode</label><select id="f-fee-mode" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white"><option>Cash</option><option>UPI</option></select></div>
       </div>
-      <div><label class="font-bold text-slate-500">Notes</label><input type="text" id="f-fee-notes" placeholder="Optional note" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-      <button type="submit" class="w-full gold-bg text-[#0F172A] font-extrabold py-3 rounded-xl shadow">Save Payment</button>
+      <button type="submit" class="w-full c-green text-white font-bold py-2.5 rounded-xl">Save Fee</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL: CREATE TEST -->
-<div id="modal-test" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[88vh] flex flex-col overflow-hidden">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
-      <h3 class="font-bold text-sm">Create Test & Enter Marks</h3>
-      <button type="button" onclick="closeModal('modal-test')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <form onsubmit="saveTestForm(event)" class="p-4 space-y-3 text-xs overflow-y-auto">
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Test Name *</label><input type="text" id="f-test-name" required placeholder="Unit Test 1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-        <div><label class="font-bold text-slate-500">Subject *</label><input type="text" id="f-test-subject" required placeholder="Mathematics" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm"></div>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-        <div><label class="font-bold text-slate-500">Batch *</label><select id="f-test-batch" onchange="renderTestMarksEntry()" class="w-full border rounded-xl px-2 py-2 mt-1 bg-white font-bold"></select></div>
-        <div><label class="font-bold text-slate-500">Class</label><input type="text" id="f-test-class" placeholder="Class 10th" class="w-full border rounded-xl px-2.5 py-2 mt-1"></div>
-        <div><label class="font-bold text-slate-500">Test Date *</label><input type="date" id="f-test-date" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2.5">
-        <div><label class="font-bold text-slate-500">Max Marks *</label><input type="number" id="f-test-max" required value="100" min="1" class="w-full border rounded-xl px-3 py-2 mt-1 font-bold"></div>
-        <div><label class="font-bold text-slate-500">Passing Marks *</label><input type="number" id="f-test-pass" required value="35" min="0" class="w-full border rounded-xl px-3 py-2 mt-1 font-bold"></div>
-      </div>
-      <div id="f-test-marks-wrap" class="border rounded-xl divide-y max-h-52 overflow-y-auto p-1.5"></div>
-      <button type="submit" class="w-full navy-bg text-white font-bold py-3 rounded-xl shadow">Save Test & Marks</button>
+<!-- TEST MODAL -->
+<div id="modal-test" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[88vh] flex flex-col overflow-hidden">
+    <div class="px-4 py-3 c-purple text-white flex justify-between items-center"><h3 class="font-bold text-sm">Add Test & Marks</h3><button type="button" onclick="closeM('modal-test')"><i class="fa-solid fa-xmark"></i></button></div>
+    <form onsubmit="saveTestForm(event)" class="p-4 space-y-2.5 text-xs overflow-y-auto">
+      <div class="grid grid-cols-2 gap-2"><input type="text" id="f-test-name" required placeholder="Test Name *" class="border rounded-xl px-3 py-2 text-sm"><input type="text" id="f-test-sub" required placeholder="Subject *" class="border rounded-xl px-3 py-2 text-sm"></div>
+      <div class="grid grid-cols-2 gap-2"><select id="f-test-batch" onchange="renderTestMarksInp()" class="border rounded-xl px-2 py-2 bg-white font-bold"></select><input type="date" id="f-test-date" required class="border rounded-xl px-2 py-2"></div>
+      <div class="grid grid-cols-2 gap-2"><input type="number" id="f-test-max" required value="100" min="1" placeholder="Max Marks" class="border rounded-xl px-3 py-2 font-bold"><input type="number" id="f-test-pass" required value="35" min="0" placeholder="Pass Marks" class="border rounded-xl px-3 py-2 font-bold"></div>
+      <div id="f-test-marks" class="border rounded-xl divide-y max-h-48 overflow-y-auto p-1"></div>
+      <button type="submit" class="w-full c-purple text-white font-bold py-2.5 rounded-xl">Save Test</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL: TEST DETAIL -->
-<div id="modal-test-detail" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-6 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[88vh] flex flex-col overflow-hidden">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center">
-      <div><h3 id="td-title" class="font-bold text-sm">Test Scorecard</h3><p id="td-meta" class="text-[11px] text-slate-300"></p></div>
-      <button type="button" onclick="closeModal('modal-test-detail')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
+<!-- TEST DETAIL MODAL -->
+<div id="modal-test-det" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden">
+    <div class="px-4 py-3 c-purple text-white flex justify-between items-center"><div><h3 id="td-title" class="font-bold text-sm">Test Marks</h3><p id="td-meta" class="text-[11px] text-purple-100"></p></div><button type="button" onclick="closeM('modal-test-det')"><i class="fa-solid fa-xmark"></i></button></div>
     <div id="td-body" class="p-4 overflow-y-auto space-y-2"></div>
-    <div class="p-3 bg-slate-50 border-t flex justify-end"><button type="button" id="td-del-btn" class="text-xs font-bold text-rose-600 px-3 py-1">Delete Test</button></div>
+    <div class="p-3 bg-slate-50 border-t text-right"><button type="button" id="td-del" class="text-xs font-bold text-rose-600">Delete Test</button></div>
   </div>
 </div>
 
-<!-- MODAL: SETTINGS -->
-<div id="modal-settings" class="fixed inset-0 z-50 hidden modal-bg flex items-start pt-8 justify-center p-3 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-5 py-3.5 navy-bg text-white flex justify-between items-center"><h3 class="font-bold text-sm">Security & Database Settings</h3><button type="button" onclick="closeModal('modal-settings')"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="p-4 space-y-4 text-xs">
-      <div><label class="font-bold text-slate-500">Google Apps Script URL</label><input type="url" id="set-gas-url" class="w-full border rounded-xl px-3 py-2 mt-1"><button type="button" onclick="updateGasUrlSetting()" class="mt-2 bg-slate-800 text-white px-3 py-1.5 rounded-lg font-bold">Update URL</button></div>
-      <form onsubmit="saveCredentialsForm(event)" class="border-t pt-3 space-y-2.5">
-        <h4 class="font-bold text-slate-700">Change Admin Login</h4>
-        <input type="password" id="set-cur-pass" required placeholder="Current Password *" class="w-full border rounded-xl px-3 py-2">
-        <input type="text" id="set-new-user" placeholder="New Username (optional)" class="w-full border rounded-xl px-3 py-2">
-        <input type="password" id="set-new-pass" placeholder="New Password (min 4 chars)" class="w-full border rounded-xl px-3 py-2">
-        <button type="submit" class="w-full navy-bg text-white font-bold py-2.5 rounded-xl">Update Login</button>
-      </form>
-      <div class="border-t pt-3 flex gap-2">
-        <button type="button" onclick="exportFullBackupExcel()" class="flex-1 bg-emerald-600 text-white font-bold py-2 rounded-xl"><i class="fa-solid fa-file-excel mr-1"></i> Backup Excel</button>
-        <button type="button" onclick="logout()" class="px-4 bg-rose-50 text-rose-600 font-bold py-2 rounded-xl">Logout</button>
-      </div>
+<script>
+let gasUrl=localStorage.getItem('AK_LH_GAS_URL')||'';
+let authToken=localStorage.getItem('AK_LH_TOKEN')||'';
+let DB={students:[],batches:[],fees:[],attendance:[],tests:[],testMarks:[],todayStr:''};
+let curSec='dashboard',feeB='ALL',feeSub='unpaid',attB='ALL',attSub='mark',attDate='',attLoc={},testB='ALL';
+const $=i=>document.getElementById(i),fmt=n=>'₹'+Number(n||0).toLocaleString('en-IN');
+function today(){if(DB.todayStr)return DB.todayStr;const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function curYM(){return today().slice(0,7);}
+function openM(i){window.scrollTo(0,0);$(i).classList.remove('hidden');}
+function closeM(i){$(i).classList.add('hidden');}
+function load(s){$('loader').classList.toggle('hidden',!s);$('loader').classList.toggle('flex',s);}
+function toast(m,err=false){$('toast-msg').innerText=m;$('toast-icon').className=err?'fa-solid fa-circle-exclamation text-rose-400':'fa-solid fa-circle-check text-emerald-400';$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),3000);}
+
+async function api(action,extra={}){
+  if(!gasUrl){openConnectModal();throw new Error('Connect Google Sheet first');}
+  let res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,token:authToken,...extra})});
+  let j=await res.json();
+  if(j.authError){
+    const lr=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'login',username:'admin',password:'ak1234'})});
+    const lj=await lr.json();
+    if(lj.ok){authToken=lj.token;localStorage.setItem('AK_LH_TOKEN',authToken);res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,token:authToken,...extra})});j=await res.json();}
+    else{openConnectModal();throw new Error(lj.error||'Auth failed');}
+  }
+  if(!j.ok)throw new Error(j.error||'Failed');
+  return j.data;
+}
+
+function openConnectModal(){$('inp-url').value=gasUrl;openM('modal-connect');}
+async function saveUrlConnect(){
+  const u=$('inp-url').value.trim();if(!u.startsWith('https://script.google.com/'))return toast('Invalid /exec URL',true);
+  gasUrl=u;localStorage.setItem('AK_LH_GAS_URL',u);closeM('modal-connect');initLoad();
+}
+
+async function initLoad(){
+  if(!gasUrl)return openConnectModal();
+  load(true);
+  try{DB=await api('getAllData');attDate=today();syncAtt();render();}
+  catch(e){toast(e.message,true);}finally{load(false);}
+}
+document.addEventListener('DOMContentLoaded',initLoad);
+
+const mColors={
+  dashboard:'text-violet-700 bg-violet-50',
+  fees:'text-emerald-700 bg-emerald-50',
+  attendance:'text-teal-700 bg-teal-50',
+  batches:'text-blue-700 bg-blue-50',
+  tests:'text-purple-700 bg-purple-50',
+  reports:'text-rose-700 bg-rose-50'
+};
+
+function navTo(sec){
+  curSec=sec;
+  ['dashboard','fees','attendance','batches','tests','reports'].forEach(t=>{
+    $('sec-'+t).classList.toggle('hidden',t!==sec);
+    const dt=$('dtab-'+t),mt=$('mtab-'+t);
+    if(dt)dt.className=t===sec?'py-2.5 tab-on':'py-2.5';
+    if(mt)mt.className=t===sec?`flex flex-col items-center py-1 rounded-xl text-[9px] font-bold ${mColors[t]}`:'flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400';
+  });
+  render();window.scrollTo(0,0);
+}
+
+function monthSpan(s,e){
+  if(!s||!e||s>e)return[];const r=[];let[y,m]=s.split('-').map(Number),[ey,em]=e.split('-').map(Number),g=0;
+  while((y<ey||(y===ey&&m<=em))&&g<120){r.push(y+'-'+String(m).padStart(2,'0'));if(++m>12){m=1;y++;}g++;}
+  return r;
+}
+
+function feeStats(){
+  const cm=curYM();let tExp=0,tRec=0,tPend=0,pCnt=0,uCnt=0;
+  const stus=DB.students.map(s=>{
+    const st=s.joiningDate?s.joiningDate.slice(0,7):cm;
+    const en=(s.status==='Left'&&s.leavingDate&&s.leavingDate.slice(0,7)<cm)?s.leavingDate.slice(0,7):cm;
+    const ms=monthSpan(st,en),exp=ms.length*s.monthlyFee;
+    const pays=DB.fees.filter(f=>f.admNo===s.admNo),rec=pays.reduce((a,b)=>a+b.amount,0),pend=Math.max(0,exp-rec);
+    tExp+=exp;tRec+=rec;tPend+=pend;
+    if(pend>0)uCnt++;else if(exp>0)pCnt++;
+    return{...s,exp,rec,pend,lastPay:pays[0]?pays[0].paymentDate:'-'};
+  });
+  return{stus,tExp,tRec,tPend,pCnt,uCnt};
+}
+
+function render(){
+  if(curSec==='dashboard')renderDash();
+  else if(curSec==='fees')renderFees();
+  else if(curSec==='attendance')renderAtt();
+  else if(curSec==='batches')renderBatches();
+  else if(curSec==='tests')renderTests();
+  else if(curSec==='reports')renderReports();
+}
+
+function renderDash(){
+  const fs=feeStats(),unpaid=fs.stus.filter(s=>s.pend>0),act=DB.students.filter(s=>s.status==='Active').length;
+  $('sec-dashboard').innerHTML=`
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+    <div onclick="navTo('batches')" class="c-blue text-white p-4 rounded-2xl shadow-md cursor-pointer">
+      <div class="flex justify-between"><span class="text-[10px] font-bold uppercase text-blue-100">Total Students</span><i class="fa-solid fa-users bg-white/20 p-1.5 rounded-lg text-xs"></i></div>
+      <h3 class="text-2xl font-extrabold mt-1">${act}</h3>
+      <p class="text-[11px] text-blue-100">${DB.batches.length} Batches →</p>
+    </div>
+    <div onclick="navTo('fees');feeSub='paid';render()" class="c-green text-white p-4 rounded-2xl shadow-md cursor-pointer">
+      <div class="flex justify-between"><span class="text-[10px] font-bold uppercase text-emerald-100">Fees Received</span><i class="fa-solid fa-wallet bg-white/20 p-1.5 rounded-lg text-xs"></i></div>
+      <h3 class="text-xl font-extrabold mt-1">${fmt(fs.tRec)}</h3>
+      <p class="text-[11px] text-emerald-100">${fs.pCnt} Students Paid →</p>
+    </div>
+    <div onclick="navTo('fees');feeSub='unpaid';render()" class="c-rose text-white p-4 rounded-2xl shadow-md cursor-pointer col-span-2 sm:col-span-1">
+      <div class="flex justify-between"><span class="text-[10px] font-bold uppercase text-rose-100">Fees Pending</span><i class="fa-solid fa-clock bg-white/20 p-1.5 rounded-lg text-xs"></i></div>
+      <h3 class="text-xl font-extrabold mt-1">${fmt(fs.tPend)}</h3>
+      <p class="text-[11px] text-rose-100 font-semibold">${fs.uCnt} Students Unpaid →</p>
     </div>
   </div>
-</div>
 
-<script src="app.js"></script>
-<script src="views.js"></script>
+  <div class="grid grid-cols-4 gap-2">
+    <button type="button" onclick="navTo('fees')" class="card p-2.5 rounded-2xl text-center hover:border-emerald-400"><i class="fa-solid fa-indian-rupee-sign text-emerald-600 text-base block mb-1"></i><span class="text-[11px] font-bold">Fees</span></button>
+    <button type="button" onclick="navTo('attendance')" class="card p-2.5 rounded-2xl text-center hover:border-teal-400"><i class="fa-solid fa-calendar-check text-teal-600 text-base block mb-1"></i><span class="text-[11px] font-bold">Attend</span></button>
+    <button type="button" onclick="navTo('tests')" class="card p-2.5 rounded-2xl text-center hover:border-purple-400"><i class="fa-solid fa-file-pen text-purple-600 text-base block mb-1"></i><span class="text-[11px] font-bold">Tests</span></button>
+    <button type="button" onclick="navTo('reports')" class="card p-2.5 rounded-2xl text-center hover:border-rose-400"><i class="fa-solid fa-chart-simple text-rose-600 text-base block mb-1"></i><span class="text-[11px] font-bold">Reports</span></button>
+  </div>
+
+  <div class="card rounded-2xl overflow-hidden">
+    <div class="px-4 py-3 border-b bg-rose-50/70 flex justify-between items-center"><h3 class="font-bold text-sm text-rose-900">Pending Fees (${unpaid.length} Students)</h3><button type="button" onclick="navTo('fees')" class="text-xs font-bold text-rose-600">Batch Wise →</button></div>
+    <div class="divide-y max-h-72 overflow-y-auto">${unpaid.length?unpaid.map(s=>`<div class="px-4 py-2.5 flex justify-between items-center gap-2"><div><p onclick="openStudentModal('${s.admNo}')" class="font-bold text-xs cursor-pointer">${s.name} <span class="text-violet-600">(${s.batches.join(', ')||'No Batch'})</span></p><p class="text-[10px] text-slate-500">Paid: ${fmt(s.rec)} • Due: <b class="text-rose-600">${fmt(s.pend)}</b></p></div><div class="flex gap-1.5"><button type="button" onclick="openFeeModal('${s.admNo}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold">Pay</button><button type="button" onclick="waFee('${s.admNo}',${s.pend})" class="bg-green-100 text-green-700 p-1.5 rounded-lg text-xs"><i class="fa-brands fa-whatsapp"></i></button></div></div>`).join(''):'<p class="p-6 text-center text-xs text-slate-400">All student fees are clear!</p>'}</div>
+  </div>`;
+}
+
+function batchPills(sel,fn){
+  const bs=DB.batches.map(b=>b.name);
+  return`<div class="flex flex-wrap gap-1.5"><button type="button" onclick="${fn}='ALL';render()" class="px-3 py-1.5 rounded-xl text-xs font-bold ${sel==='ALL'?'top-grad text-white shadow':'bg-white border text-slate-600'}">All</button>${bs.map(b=>`<button type="button" onclick="${fn}=decodeURIComponent('${encodeURIComponent(b)}');render()" class="px-3 py-1.5 rounded-xl text-xs font-bold ${sel===b?'top-grad text-white shadow':'bg-white border text-slate-600'}">${b}</button>`).join('')}</div>`;
+}
+
+function renderFees(){
+  const fs=feeStats(),list=fs.stus.filter(s=>feeB==='ALL'||s.batches.includes(feeB));
+  const unpaid=list.filter(s=>s.pend>0),paid=list.filter(s=>s.pend<=0);
+  const bRec=list.reduce((a,b)=>a+b.rec,0),bPend=list.reduce((a,b)=>a+b.pend,0);
+  const show=feeSub==='unpaid'?unpaid:paid;
+  $('sec-fees').innerHTML=`
+  ${batchPills(feeB,'feeB')}
+  <div class="grid grid-cols-2 gap-2.5 text-center">
+    <div class="c-green text-white p-3 rounded-2xl shadow-sm"><p class="text-[10px] font-bold text-emerald-100">COLLECTED</p><b class="text-lg">${fmt(bRec)}</b></div>
+    <div class="c-rose text-white p-3 rounded-2xl shadow-sm"><p class="text-[10px] font-bold text-rose-100">PENDING</p><b class="text-lg">${fmt(bPend)}</b></div>
+  </div>
+  <div class="grid grid-cols-2 gap-2">
+    <button type="button" onclick="feeSub='unpaid';render()" class="py-2.5 rounded-xl text-xs font-bold ${feeSub==='unpaid'?'bg-rose-600 text-white shadow':'card text-rose-600'}">Unpaid (${unpaid.length})</button>
+    <button type="button" onclick="feeSub='paid';render()" class="py-2.5 rounded-xl text-xs font-bold ${feeSub==='paid'?'bg-emerald-600 text-white shadow':'card text-emerald-600'}">Paid (${paid.length})</button>
+  </div>
+  <div class="space-y-2">${show.length?show.map(s=>`<div class="card p-3.5 rounded-2xl flex justify-between items-center gap-2"><div><h4 onclick="openStudentModal('${s.admNo}')" class="font-bold text-sm cursor-pointer">${s.name}</h4><p class="text-[11px] text-violet-600 font-medium">${s.batches.join(', ')||'No Batch'} • ${fmt(s.monthlyFee)}/mo</p><p class="text-[11px]">Paid: <b class="text-emerald-600">${fmt(s.rec)}</b> • ${s.pend>0?`Pending: <b class="text-rose-600">${fmt(s.pend)}</b>`:`Last Paid: ${s.lastPay}`}</p></div><div class="flex gap-1.5 shrink-0"><button type="button" onclick="openFeeModal('${s.admNo}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">+ Pay</button>${s.pend>0?`<button type="button" onclick="waFee('${s.admNo}',${s.pend})" class="bg-green-100 text-green-700 p-2 rounded-xl text-xs"><i class="fa-brands fa-whatsapp"></i></button>`:''}</div></div>`).join(''):'<div class="card p-8 rounded-2xl text-center text-xs text-slate-400">No students in this list.</div>'}</div>`;
+}
+
+function syncAtt(){
+  attLoc={};
+  DB.attendance.filter(a=>a.date===attDate&&(attB==='ALL'||a.batchName===attB)).forEach(a=>{attLoc[a.admNo]=a.status;});
+}
+function renderAtt(){
+  if(!attDate)attDate=today();
+  const list=DB.students.filter(s=>s.status==='Active'&&(attB==='ALL'||s.batches.includes(attB)));
+  let p=0,a=0,l=0;list.forEach(s=>{const st=attLoc[s.admNo]||'Present';if(st==='Present')p++;else if(st==='Absent')a++;else l++;});
+  const show=attSub==='mark'?list:list.filter(s=>(attLoc[s.admNo]||'Present')===attSub);
+  $('sec-attendance').innerHTML=`
+  ${batchPills(attB,'attB')}
+  <div class="card p-3 rounded-2xl flex justify-between items-center gap-2">
+    <input type="date" value="${attDate}" onchange="attDate=this.value;syncAtt();render()" class="border rounded-xl px-2.5 py-1.5 text-xs font-bold">
+    <button type="button" onclick="saveAttNow()" class="c-teal text-white px-4 py-2 rounded-xl text-xs font-bold shadow">Save Attendance</button>
+  </div>
+  <div class="grid grid-cols-4 gap-1.5">
+    <button type="button" onclick="attSub='mark';render()" class="py-2 rounded-xl text-[11px] font-bold ${attSub==='mark'?'top-grad text-white':'card'}">All (${list.length})</button>
+    <button type="button" onclick="attSub='Present';render()" class="py-2 rounded-xl text-[11px] font-bold ${attSub==='Present'?'bg-emerald-600 text-white':'card text-emerald-600'}">Pres (${p})</button>
+    <button type="button" onclick="attSub='Absent';render()" class="py-2 rounded-xl text-[11px] font-bold ${attSub==='Absent'?'bg-rose-600 text-white':'card text-rose-600'}">Abs (${a})</button>
+    <button type="button" onclick="attSub='Leave';render()" class="py-2 rounded-xl text-[11px] font-bold ${attSub==='Leave'?'bg-amber-500 text-white':'card text-amber-600'}">Leave (${l})</button>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-2">${show.length?show.map(s=>{const st=attLoc[s.admNo]||'Present';return`<div class="card p-3 rounded-2xl flex justify-between items-center gap-2"><div><h4 class="font-bold text-sm">${s.name}</h4><p class="text-[10px] text-slate-400">${s.studentClass} • ${s.batches.join(', ')}</p></div><div class="flex bg-slate-100 p-1 rounded-xl gap-1"><button type="button" onclick="attLoc['${s.admNo}']='Present';render()" class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${st==='Present'?'bg-emerald-500 text-white':'text-slate-500'}">P</button><button type="button" onclick="attLoc['${s.admNo}']='Absent';render()" class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${st==='Absent'?'bg-rose-500 text-white':'text-slate-500'}">A</button><button type="button" onclick="attLoc['${s.admNo}']='Leave';render()" class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${st==='Leave'?'bg-amber-500 text-white':'text-slate-500'}">L</button></div></div>`;}).join(''):'<div class="col-span-full card p-8 rounded-2xl text-center text-xs text-slate-400">No students found.</div>'}</div>`;
+}
+async function saveAttNow(){
+  const bn=attB==='ALL'?'General':attB,list=DB.students.filter(s=>s.status==='Active'&&(attB==='ALL'||s.batches.includes(attB)));
+  if(!list.length)return toast('No students',true);load(true);
+  try{DB=await api('saveAttendance',{payload:{date:attDate,batchName:bn,records:list.map(s=>({admNo:s.admNo,studentName:s.name,status:attLoc[s.admNo]||'Present',remark:''}))}});render();toast('Attendance saved!');}catch(e){toast(e.message,true);}finally{load(false);}
+}
+
+function renderBatches(){
+  $('sec-batches').innerHTML=`<div class="flex justify-between items-center"><h2 class="font-bold text-sm">Batches (${DB.batches.length})</h2><button type="button" onclick="openBatchModal(null)" class="c-teal text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow">+ Create Batch</button></div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">${DB.batches.length?DB.batches.map(b=>{
+    const cnt=DB.students.filter(s=>s.batches.includes(b.name)).length,enc=encodeURIComponent(b.name);
+    return`<div class="card p-4 rounded-2xl space-y-3 border-t-4 border-t-violet-500"><div class="flex justify-between items-start"><div><h3 class="font-bold text-base">${b.name}</h3><p class="text-[11px] text-slate-500">${b.batchClass||''} • ${b.timing||''}</p></div><div class="flex gap-1"><button type="button" onclick="openBatchModal('${b.id}')" class="p-1.5 bg-violet-50 text-violet-600 rounded-lg text-xs"><i class="fa-solid fa-pen"></i></button><button type="button" onclick="delBatch('${b.id}',decodeURIComponent('${enc}'))" class="p-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button></div></div><div class="flex justify-between items-center bg-violet-50/70 p-2.5 rounded-xl text-xs font-bold"><span>Students: ${cnt}</span><button type="button" onclick="openBatchStus(decodeURIComponent('${enc}'))" class="text-violet-700">Add / View Students →</button></div></div>`;
+  }).join(''):'<div class="col-span-full card p-8 rounded-2xl text-center text-xs text-slate-400">No batches yet. Tap "+ Create Batch"!</div>'}</div>`;
+}
+function openBatchStus(bn){
+  const inB=DB.students.filter(s=>s.batches.includes(bn)),notIn=DB.students.filter(s=>!s.batches.includes(bn)&&s.status==='Active'),enc=encodeURIComponent(bn);
+  $('mbs-title').innerText=`${bn} (${inB.length} Students)`;
+  $('mbs-body').innerHTML=`<button type="button" onclick="closeM('modal-batch-stus');openStudentModal(null,decodeURIComponent('${enc}'))" class="w-full top-grad text-white py-2 rounded-xl font-bold">+ Add New Student to ${bn}</button>
+  <div class="divide-y border rounded-xl">${inB.map(s=>`<div class="p-2.5 flex justify-between items-center"><span onclick="closeM('modal-batch-stus');openStudentModal('${s.admNo}')" class="font-bold cursor-pointer">${s.name} <span class="text-slate-400">(${s.studentClass})</span></span><div class="flex gap-2"><button type="button" onclick="closeM('modal-batch-stus');openStudentModal('${s.admNo}')" class="text-violet-600 font-bold">Edit</button><button type="button" onclick="togStuBat('${s.admNo}',decodeURIComponent('${enc}'),false)" class="text-rose-600 font-bold">Remove</button></div></div>`).join('')||'<p class="p-3 text-slate-400 text-center">No students in this batch.</p>'}</div>
+  ${notIn.length?`<div class="flex gap-2 pt-1"><select id="mbs-add" class="flex-1 border rounded-xl px-2 py-2 bg-white">${notIn.map(s=>`<option value="${s.admNo}">${s.name}</option>`).join('')}</select><button type="button" onclick="togStuBat($('mbs-add').value,decodeURIComponent('${enc}'),true)" class="bg-emerald-600 text-white px-3 rounded-xl font-bold">+ Add Existing</button></div>`:''}`;
+  openM('modal-batch-stus');
+}
+async function togStuBat(adm,bn,add){
+  const s=DB.students.find(x=>x.admNo===adm);if(!s)return;
+  let bs=[...s.batches];if(add&&!bs.includes(bn))bs.push(bn);if(!add)bs=bs.filter(x=>x!==bn);
+  load(true);try{DB=await api('editStudent',{payload:{...s,batches:bs}});openBatchStus(bn);render();}catch(e){toast(e.message,true);}finally{load(false);}
+}
+
+function renderTests(){
+  const list=DB.tests.filter(t=>testB==='ALL'||t.batch===testB);
+  $('sec-tests').innerHTML=`<div class="flex justify-between items-center"><h2 class="font-bold text-sm">Batch-Wise Tests</h2><button type="button" onclick="openTestModal()" class="c-purple text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow">+ Add Test</button></div>
+  ${batchPills(testB,'testB')}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">${list.length?list.map(t=>{const ms=DB.testMarks.filter(m=>m.testId===t.testId),avg=ms.length?Math.round(ms.reduce((a,b)=>a+(b.obtained/t.maxMarks)*100,0)/ms.length):0;return`<div onclick="openTestDet('${t.testId}')" class="card p-4 rounded-2xl cursor-pointer space-y-2 border-t-4 border-t-purple-500"><div class="flex justify-between text-[10px] font-bold"><span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">${t.batch} • ${t.subject}</span><span class="text-slate-400">${t.testDate}</span></div><h3 class="font-bold text-sm">${t.testName}</h3><div class="flex justify-between text-xs pt-2 border-t"><span>${ms.length} Students</span><b class="text-purple-600">Avg ${avg}% →</b></div></div>`;}).join(''):'<div class="col-span-full card p-8 rounded-2xl text-center text-xs text-slate-400">No tests yet.</div>'}</div>`;
+}
+
+function renderReports(){
+  const d=new Date(),cy=d.getFullYear(),ly=cy-1,cm=curYM();
+  const lmD=new Date(d.getFullYear(),d.getMonth()-1,1),lm=lmD.getFullYear()+'-'+String(lmD.getMonth()+1).padStart(2,'0');
+  const admCM=DB.students.filter(s=>s.joiningDate&&s.joiningDate.startsWith(cm)).length;
+  const admLM=DB.students.filter(s=>s.joiningDate&&s.joiningDate.startsWith(lm)).length;
+  const admCY=DB.students.filter(s=>s.joiningDate&&s.joiningDate.startsWith(String(cy))).length;
+  const admLY=DB.students.filter(s=>s.joiningDate&&s.joiningDate.startsWith(String(ly))).length;
+  const feeCM=DB.fees.filter(f=>f.paymentDate&&f.paymentDate.startsWith(cm)).reduce((a,b)=>a+b.amount,0);
+  const feeLM=DB.fees.filter(f=>f.paymentDate&&f.paymentDate.startsWith(lm)).reduce((a,b)=>a+b.amount,0);
+  const feeCY=DB.fees.filter(f=>f.paymentDate&&f.paymentDate.startsWith(String(cy))).reduce((a,b)=>a+b.amount,0);
+  const feeLY=DB.fees.filter(f=>f.paymentDate&&f.paymentDate.startsWith(String(ly))).reduce((a,b)=>a+b.amount,0);
+
+  $('sec-reports').innerHTML=`
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+    <div class="card p-4 rounded-2xl space-y-3"><h3 class="font-bold text-sm text-indigo-800">Admissions Report</h3><div class="grid grid-cols-2 gap-2.5 text-center text-xs"><div class="bg-indigo-50 p-3 rounded-xl"><p class="text-indigo-600 font-bold">THIS MONTH</p><b class="text-xl text-indigo-700">${admCM}</b></div><div class="bg-slate-50 p-3 rounded-xl"><p class="text-slate-400 font-bold">LAST MONTH</p><b class="text-xl">${admLM}</b></div><div class="bg-violet-50 p-3 rounded-xl"><p class="text-violet-600 font-bold">THIS YEAR (${cy})</p><b class="text-xl text-violet-700">${admCY}</b></div><div class="bg-slate-50 p-3 rounded-xl"><p class="text-slate-400 font-bold">LAST YEAR (${ly})</p><b class="text-xl">${admLY}</b></div></div></div>
+    <div class="card p-4 rounded-2xl space-y-3"><h3 class="font-bold text-sm text-emerald-800">Fee Collection Report</h3><div class="grid grid-cols-2 gap-2.5 text-center text-xs"><div class="bg-emerald-50 p-3 rounded-xl"><p class="text-emerald-700 font-bold">THIS MONTH</p><b class="text-lg text-emerald-700">${fmt(feeCM)}</b></div><div class="bg-slate-50 p-3 rounded-xl"><p class="text-slate-400 font-bold">LAST MONTH</p><b class="text-lg">${fmt(feeLM)}</b></div><div class="bg-teal-50 p-3 rounded-xl"><p class="text-teal-700 font-bold">THIS YEAR (${cy})</p><b class="text-lg text-teal-700">${fmt(feeCY)}</b></div><div class="bg-slate-50 p-3 rounded-xl"><p class="text-slate-400 font-bold">LAST YEAR (${ly})</p><b class="text-lg">${fmt(feeLY)}</b></div></div></div>
+  </div>
+  <div class="card p-4 rounded-2xl space-y-2"><h3 class="font-bold text-sm">Batch-Wise Students</h3>${DB.batches.map(b=>`<div class="flex justify-between py-1.5 border-b text-xs"><span>${b.name}</span><b class="text-violet-700">${DB.students.filter(s=>s.batches.includes(b.name)).length} Students</b></div>`).join('')||'<p class="text-xs text-slate-400">No batches.</p>'}</div>`;
+}
+
+// CRUD HANDLERS
+function openStudentModal(adm,preBatch=''){
+  const s=adm?DB.students.find(x=>x.admNo===adm):null;
+  $('stu-m-title').innerText=s?`Edit Student (${s.admNo})`:'Add Student';
+  $('f-stu-admno').value=s?s.admNo:'';$('f-stu-name').value=s?s.name:'';$('f-stu-class').value=s?s.studentClass:'';
+  $('f-stu-fee').value=s?s.monthlyFee:'';$('f-stu-father').value=s?s.fatherName:'';$('f-stu-pphone').value=s?s.parentPhone:'';
+  $('f-stu-jdate').value=s?s.joiningDate:today();$('f-stu-status').value=s?s.status:'Active';
+  $('f-stu-ldate').value=s?s.leavingDate:'';$('f-stu-addr').value=s?s.address:'';
+  const del=$('f-stu-del');del.classList.toggle('hidden',!s);if(s)del.onclick=()=>delStudent(s.admNo);
+  const cbs=s?s.batches:(preBatch?[preBatch]:[]);
+  $('f-stu-batches').innerHTML=DB.batches.map(b=>`<label class="inline-flex items-center gap-1 px-2 py-1 bg-white border rounded-lg"><input type="checkbox" class="fstb" value="${b.name}" ${cbs.includes(b.name)?'checked':''}><span>${b.name}</span></label>`).join('')||'<span class="text-slate-400">Create a batch first</span>';
+  openM('modal-student');
+}
+async function saveStudentForm(e){
+  e.preventDefault();const adm=$('f-stu-admno').value,batches=[...document.querySelectorAll('.fstb:checked')].map(c=>c.value);
+  closeM('modal-student');load(true);
+  try{DB=await api(adm?'editStudent':'addStudent',{payload:{admNo:adm,name:$('f-stu-name').value,studentClass:$('f-stu-class').value,monthlyFee:$('f-stu-fee').value,fatherName:$('f-stu-father').value,parentPhone:$('f-stu-pphone').value,batches,joiningDate:$('f-stu-jdate').value,status:$('f-stu-status').value,leavingDate:$('f-stu-ldate').value,address:$('f-stu-addr').value}});render();toast('Saved!');}catch(err){toast(err.message,true);}finally{load(false);}
+}
+async function delStudent(adm){if(!confirm('Delete this student?'))return;closeM('modal-student');load(true);try{DB=await api('deleteStudent',{admNo:adm});render();toast('Deleted');}catch(e){toast(e.message,true);}finally{load(false);}}
+
+function openBatchModal(id){
+  const b=id?DB.batches.find(x=>x.id===id):null;
+  $('bat-m-title').innerText=b?'Edit Batch':'Create Batch';$('f-bat-id').value=b?b.id:'';$('f-bat-old').value=b?b.name:'';
+  $('f-bat-name').value=b?b.name:'';$('f-bat-class').value=b?b.batchClass:'';$('f-bat-time').value=b?b.timing:'';openM('modal-batch');
+}
+async function saveBatchForm(e){
+  e.preventDefault();const id=$('f-bat-id').value;closeM('modal-batch');load(true);
+  try{DB=await api(id?'editBatch':'addBatch',{payload:{id,oldName:$('f-bat-old').value,name:$('f-bat-name').value,batchClass:$('f-bat-class').value,timing:$('f-bat-time').value,status:'Active'}});render();toast('Batch saved!');}catch(err){toast(err.message,true);}finally{load(false);}
+}
+async function delBatch(id,bn){if(!confirm(`Delete batch "${bn}"?`))return;load(true);try{DB=await api('deleteBatch',{batchId:id,batchName:bn});render();toast('Batch deleted');}catch(e){toast(e.message,true);}finally{load(false);}}
+
+function openFeeModal(adm=''){
+  if(!DB.students.length)return toast('Add student first',true);
+  $('f-fee-admno').innerHTML=DB.students.map(s=>`<option value="${s.admNo}">${s.name} (${s.studentClass})</option>`).join('');
+  if(adm)$('f-fee-admno').value=adm;$('f-fee-month').value=curYM();$('f-fee-date').value=today();updateFeeHint();openM('modal-fee');
+}
+function updateFeeHint(){const s=feeStats().stus.find(x=>x.admNo===$('f-fee-admno').value);if(s){$('f-fee-hint').innerText=`Total Pending: ${fmt(s.pend)} | Monthly: ${fmt(s.monthlyFee)}`;$('f-fee-amount').value=s.pend>0?s.pend:s.monthlyFee;}}
+async function saveFeeForm(e){
+  e.preventDefault();const adm=$('f-fee-admno').value,s=DB.students.find(x=>x.admNo===adm);closeM('modal-fee');load(true);
+  try{DB=await api('recordFee',{payload:{admNo:adm,studentName:s?s.name:'',feeMonth:$('f-fee-month').value,paymentDate:$('f-fee-date').value,amount:$('f-fee-amount').value,mode:$('f-fee-mode').value}});render();toast('Fee saved!');}catch(err){toast(err.message,true);}finally{load(false);}
+}
+
+function openTestModal(){
+  if(!DB.students.length)return toast('Add student first',true);
+  $('f-test-batch').innerHTML='<option value="ALL">All Batches</option>'+DB.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('');
+  $('f-test-date').value=today();renderTestMarksInp();openM('modal-test');
+}
+function renderTestMarksInp(){
+  const b=$('f-test-batch').value,list=DB.students.filter(s=>s.status==='Active'&&(b==='ALL'||s.batches.includes(b)));
+  $('f-test-marks').innerHTML=list.map(s=>`<div class="flex justify-between items-center p-2"><span class="font-semibold">${s.name}</span><input type="number" data-adm="${s.admNo}" data-name="${s.name}" min="0" placeholder="Marks" class="ftm w-20 border rounded-lg px-2 py-1 text-center font-bold"></div>`).join('')||'<p class="p-3 text-center text-slate-400">No students</p>';
+}
+async function saveTestForm(e){
+  e.preventDefault();const ml=[];document.querySelectorAll('.ftm').forEach(i=>{if(i.value!=='')ml.push({admNo:i.dataset.adm,studentName:i.dataset.name,obtained:Number(i.value)});});
+  if(!ml.length)return toast('Enter marks for at least 1 student',true);closeM('modal-test');load(true);
+  try{DB=await api('saveTestWithMarks',{payload:{testName:$('f-test-name').value,subject:$('f-test-sub').value,batch:$('f-test-batch').value,testDate:$('f-test-date').value,maxMarks:$('f-test-max').value,passingMarks:$('f-test-pass').value,marksList:ml}});e.target.reset();render();toast('Test saved!');}catch(err){toast(err.message,true);}finally{load(false);}
+}
+function openTestDet(tid){
+  const t=DB.tests.find(x=>x.testId===tid);if(!t)return;
+  const ms=DB.testMarks.filter(m=>m.testId===tid).sort((a,b)=>b.obtained-a.obtained);
+  $('td-title').innerText=`${t.testName} (${t.subject})`;$('td-meta').innerText=`${t.testDate} • ${t.batch} • Max: ${t.maxMarks}`;
+  $('td-body').innerHTML=ms.map((m,i)=>`<div class="p-2.5 border rounded-xl flex justify-between text-xs"><div><b class="mr-1">#${i+1}</b>${m.studentName}</div><div><b>${m.obtained}/${t.maxMarks}</b> (${Math.round((m.obtained/t.maxMarks)*100)}%) <span class="ml-1 font-bold ${m.obtained>=t.passingMarks?'text-emerald-600':'text-rose-600'}">${m.obtained>=t.passingMarks?'PASS':'FAIL'}</span></div></div>`).join('');
+  $('td-del').onclick=async()=>{if(!confirm('Delete test?'))return;closeM('modal-test-det');load(true);try{DB=await api('deleteTest',{testId:tid});render();toast('Deleted');}catch(e){toast(e.message,true);}finally{load(false);}};
+  openM('modal-test-det');
+}
+
+function waFee(adm,pend){
+  const s=DB.students.find(x=>x.admNo===adm);let ph=((s&&(s.parentPhone||s.studentPhone))||'').replace(/\D/g,'');
+  if(ph.length===10)ph='91'+ph;if(!ph)return toast('No phone saved',true);
+  window.open(`https://wa.me/${ph}?text=${encodeURIComponent(`Hello, fee reminder from *AK Learning Hub* for *${s.name}*. Pending Fee: *₹${pend}*. Thank you!`)}`,'_blank');
+}
+</script>
 </body>
 </html>
