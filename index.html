@@ -15,7 +15,6 @@
   .c-rose{background:linear-gradient(135deg,#e11d48,#f97316)}
   .c-teal{background:linear-gradient(135deg,#0d9488,#06b6d4)}
   .c-purple{background:linear-gradient(135deg,#7c3aed,#c026d3)}
-  .c-amber{background:linear-gradient(135deg,#d97706,#f59e0b)}
   .card{background:#fff;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(79,70,229,.06)}
   .mbg{background:rgba(15,23,42,.55);backdrop-filter:blur(3px)}
   .tab-on{color:#6d28d9;border-bottom:3px solid #6d28d9;font-weight:700}
@@ -76,7 +75,6 @@
   <button type="button" onclick="navTo('reports')" id="mtab-reports" class="flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400"><i class="fa-solid fa-chart-simple text-xs mb-0.5"></i><span>Reports</span></button>
 </nav>
 
-<!-- CONNECT MODAL -->
 <div id="modal-connect" class="fixed inset-0 z-50 hidden mbg flex items-start pt-12 justify-center p-3">
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
     <div class="px-4 py-3 top-grad text-white flex justify-between items-center"><h3 class="font-bold text-sm">Connect Google Sheet</h3><button type="button" onclick="closeM('modal-connect')"><i class="fa-solid fa-xmark"></i></button></div>
@@ -88,7 +86,6 @@
   </div>
 </div>
 
-<!-- STUDENT MODAL -->
 <div id="modal-student" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3 overflow-y-auto">
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[88vh] overflow-y-auto">
     <div class="px-4 py-3 top-grad text-white flex justify-between items-center sticky top-0"><h3 id="stu-m-title" class="font-bold text-sm">Add Student</h3><button type="button" onclick="closeM('modal-student')"><i class="fa-solid fa-xmark"></i></button></div>
@@ -120,7 +117,6 @@
   </div>
 </div>
 
-<!-- BATCH MODAL -->
 <div id="modal-batch" class="fixed inset-0 z-50 hidden mbg flex items-start pt-10 justify-center p-3">
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
     <div class="px-4 py-3 c-teal text-white flex justify-between items-center"><h3 id="bat-m-title" class="font-bold text-sm">Create Batch</h3><button type="button" onclick="closeM('modal-batch')"><i class="fa-solid fa-xmark"></i></button></div>
@@ -136,7 +132,6 @@
   </div>
 </div>
 
-<!-- BATCH STUDENTS MODAL -->
 <div id="modal-batch-stus" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3">
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden">
     <div class="px-4 py-3 c-blue text-white flex justify-between items-center"><h3 id="mbs-title" class="font-bold text-sm">Batch Students</h3><button type="button" onclick="closeM('modal-batch-stus')"><i class="fa-solid fa-xmark"></i></button></div>
@@ -144,118 +139,4 @@
   </div>
 </div>
 
-<!-- FEE MODAL -->
-<div id="modal-fee" class="fixed inset-0 z-50 hidden mbg flex items-start pt-10 justify-center p-3">
-  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden">
-    <div class="px-4 py-3 c-green text-white flex justify-between items-center"><h3 class="font-bold text-sm">Collect Fee</h3><button type="button" onclick="closeM('modal-fee')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="saveFeeForm(event)" class="p-4 space-y-3 text-xs">
-      <div><label class="font-semibold text-slate-500">Student *</label><select id="f-fee-admno" required onchange="updateFeeHint()" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white"></select></div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="font-semibold text-slate-500">Month *</label><input type="month" id="f-fee-month" required onchange="updateFeeHint()" class="w-full border rounded-xl px-2 py-2 mt-1"></div>
-        <div><label class="font-semibold text-slate-500">Date *</label><input type="date" id="f-fee-date" required class="w-full border rounded-xl px-2 py-2 mt-1"></div>
-      </div>
-      <div id="f-fee-hint" class="bg-emerald-50 border border-emerald-200 p-2 rounded-xl font-semibold text-emerald-900"></div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="font-semibold text-slate-500">Amount (₹) *</label><input type="number" id="f-fee-amount" required min="1" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm font-bold"></div>
-        <div><label class="font-semibold text-slate-500">Mode</label><select id="f-fee-mode" class="w-full border rounded-xl px-3 py-2 mt-1 text-sm bg-white"><option>Cash</option><option>UPI</option></select></div>
-      </div>
-      <button type="submit" class="w-full c-green text-white font-bold py-2.5 rounded-xl">Save Fee</button>
-    </form>
-  </div>
-</div>
-
-<!-- TEST MODAL -->
-<div id="modal-test" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3">
-  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[88vh] flex flex-col overflow-hidden">
-    <div class="px-4 py-3 c-purple text-white flex justify-between items-center"><h3 class="font-bold text-sm">Add Test & Marks</h3><button type="button" onclick="closeM('modal-test')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form onsubmit="saveTestForm(event)" class="p-4 space-y-2.5 text-xs overflow-y-auto">
-      <div class="grid grid-cols-2 gap-2"><input type="text" id="f-test-name" required placeholder="Test Name *" class="border rounded-xl px-3 py-2 text-sm"><input type="text" id="f-test-sub" required placeholder="Subject *" class="border rounded-xl px-3 py-2 text-sm"></div>
-      <div class="grid grid-cols-2 gap-2"><select id="f-test-batch" onchange="renderTestMarksInp()" class="border rounded-xl px-2 py-2 bg-white font-bold"></select><input type="date" id="f-test-date" required class="border rounded-xl px-2 py-2"></div>
-      <div class="grid grid-cols-2 gap-2"><input type="number" id="f-test-max" required value="100" min="1" placeholder="Max Marks" class="border rounded-xl px-3 py-2 font-bold"><input type="number" id="f-test-pass" required value="35" min="0" placeholder="Pass Marks" class="border rounded-xl px-3 py-2 font-bold"></div>
-      <div id="f-test-marks" class="border rounded-xl divide-y max-h-48 overflow-y-auto p-1"></div>
-      <button type="submit" class="w-full c-purple text-white font-bold py-2.5 rounded-xl">Save Test</button>
-    </form>
-  </div>
-</div>
-
-<!-- TEST DETAIL MODAL -->
-<div id="modal-test-det" class="fixed inset-0 z-50 hidden mbg flex items-start pt-6 justify-center p-3">
-  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden">
-    <div class="px-4 py-3 c-purple text-white flex justify-between items-center"><div><h3 id="td-title" class="font-bold text-sm">Test Marks</h3><p id="td-meta" class="text-[11px] text-purple-100"></p></div><button type="button" onclick="closeM('modal-test-det')"><i class="fa-solid fa-xmark"></i></button></div>
-    <div id="td-body" class="p-4 overflow-y-auto space-y-2"></div>
-    <div class="p-3 bg-slate-50 border-t text-right"><button type="button" id="td-del" class="text-xs font-bold text-rose-600">Delete Test</button></div>
-  </div>
-</div>
-
-<script>
-let gasUrl=localStorage.getItem('AK_LH_GAS_URL')||'';
-let authToken=localStorage.getItem('AK_LH_TOKEN')||'';
-let DB={students:[],batches:[],fees:[],attendance:[],tests:[],testMarks:[],todayStr:''};
-let curSec='dashboard',feeB='ALL',feeSub='unpaid',attB='ALL',attSub='mark',attDate='',attLoc={},testB='ALL';
-const $=i=>document.getElementById(i),fmt=n=>'₹'+Number(n||0).toLocaleString('en-IN');
-function today(){if(DB.todayStr)return DB.todayStr;const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function curYM(){return today().slice(0,7);}
-function openM(i){window.scrollTo(0,0);$(i).classList.remove('hidden');}
-function closeM(i){$(i).classList.add('hidden');}
-function load(s){$('loader').classList.toggle('hidden',!s);$('loader').classList.toggle('flex',s);}
-function toast(m,err=false){$('toast-msg').innerText=m;$('toast-icon').className=err?'fa-solid fa-circle-exclamation text-rose-400':'fa-solid fa-circle-check text-emerald-400';$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),3000);}
-
-async function api(action,extra={}){
-  if(!gasUrl){openConnectModal();throw new Error('Connect Google Sheet first');}
-  let res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,token:authToken,...extra})});
-  let j=await res.json();
-  if(j.authError){
-    const lr=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'login',username:'admin',password:'ak1234'})});
-    const lj=await lr.json();
-    if(lj.ok){authToken=lj.token;localStorage.setItem('AK_LH_TOKEN',authToken);res=await fetch(gasUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,token:authToken,...extra})});j=await res.json();}
-    else{openConnectModal();throw new Error(lj.error||'Auth failed');}
-  }
-  if(!j.ok)throw new Error(j.error||'Failed');
-  return j.data;
-}
-
-function openConnectModal(){$('inp-url').value=gasUrl;openM('modal-connect');}
-async function saveUrlConnect(){
-  const u=$('inp-url').value.trim();if(!u.startsWith('https://script.google.com/'))return toast('Invalid /exec URL',true);
-  gasUrl=u;localStorage.setItem('AK_LH_GAS_URL',u);closeM('modal-connect');initLoad();
-}
-
-async function initLoad(){
-  if(!gasUrl)return openConnectModal();
-  load(true);
-  try{DB=await api('getAllData');attDate=today();syncAtt();render();}
-  catch(e){toast(e.message,true);}finally{load(false);}
-}
-document.addEventListener('DOMContentLoaded',initLoad);
-
-const mColors={
-  dashboard:'text-violet-700 bg-violet-50',
-  fees:'text-emerald-700 bg-emerald-50',
-  attendance:'text-teal-700 bg-teal-50',
-  batches:'text-blue-700 bg-blue-50',
-  tests:'text-purple-700 bg-purple-50',
-  reports:'text-rose-700 bg-rose-50'
-};
-
-function navTo(sec){
-  curSec=sec;
-  ['dashboard','fees','attendance','batches','tests','reports'].forEach(t=>{
-    $('sec-'+t).classList.toggle('hidden',t!==sec);
-    const dt=$('dtab-'+t),mt=$('mtab-'+t);
-    if(dt)dt.className=t===sec?'py-2.5 tab-on':'py-2.5';
-    if(mt)mt.className=t===sec?`flex flex-col items-center py-1 rounded-xl text-[9px] font-bold ${mColors[t]}`:'flex flex-col items-center py-1 rounded-xl text-[9px] font-semibold text-slate-400';
-  });
-  render();window.scrollTo(0,0);
-}
-
-function monthSpan(s,e){
-  if(!s||!e||s>e)return[];const r=[];let[y,m]=s.split('-').map(Number),[ey,em]=e.split('-').map(Number),g=0;
-  while((y<ey||(y===ey&&m<=em))&&g<120){r.push(y+'-'+String(m).padStart(2,'0'));if(++m>12){m=1;y++;}g++;}
-  return r;
-}
-
-function feeStats(){
-  const cm=curYM();let tExp=0,tRec=0,tPend=0,pCnt=0,uCnt=0;
-  const stus=DB.students.map(s=>{
-    const st=s.joiningDate?s.joiningDate.slice(0,7):cm;
- 
+<div id="modal-fee" class="fixed inset-0 z-50 hidden
